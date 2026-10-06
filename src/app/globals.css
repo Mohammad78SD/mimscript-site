@@ -1,5 +1,27 @@
 @import "tailwindcss";
 
+/* Vazirmatn, Persian/Arabic subset only (variable font 400-800, self-hosted). Downloaded
+   only when Persian text actually renders, thanks to unicode-range. */
+@font-face {
+  font-family: "Vazir FA";
+  src: url("/fonts/vazirmatn-arabic.woff2") format("woff2");
+  font-weight: 400 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-0891, U+0897-08E1, U+08E3-08FF, U+200C-200E,
+    U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+
+/* Same file, only the space character. Used on Persian pages in mono text, where the
+   space would otherwise come from JetBrains Mono and look far too wide between Persian words. */
+@font-face {
+  font-family: "Vazir FA Space";
+  src: url("/fonts/vazirmatn-arabic.woff2") format("woff2");
+  font-weight: 400 800;
+  font-display: swap;
+  unicode-range: U+0020, U+00A0;
+}
+
 :root {
   --paper: #f2f2f0;
   --ink: #0e1220;
@@ -14,9 +36,11 @@
   --color-ink: var(--ink);
   --color-blue: var(--blue);
   --color-blue-light: var(--blue-light);
-  /* Latin glyphs come from the first font, Persian glyphs fall through to Vazirmatn */
-  --font-sans: var(--font-montserrat), var(--font-vazirmatn), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), var(--font-vazirmatn), ui-monospace, monospace;
+  /* "Vazir FA" (@font-face above) only covers Arabic-script characters, so Persian glyphs use it
+     and Latin glyphs fall through to Montserrat / JetBrains Mono. It must come first:
+     Montserrat's auto "Montserrat Fallback" is Arial, which has Persian glyphs too. */
+  --font-sans: "Vazir FA", var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Vazir FA", var(--font-jetbrains), ui-monospace, monospace;
 }
 
 html {
@@ -42,7 +66,7 @@ body {
 /* ---- Persian (lang="fa" / dir="rtl") ---- */
 /* Persian text that appears on English pages (e.g. inside an illustration). */
 .font-fa {
-  font-family: var(--font-vazirmatn), var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  font-family: "Vazir FA", var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
 }
 /* Main font on Persian pages: Latin tech names keep Montserrat, Persian uses Vazirmatn. */
 html:lang(fa) body {
@@ -57,6 +81,11 @@ html:lang(fa) body {
 html:lang(fa) .display {
   line-height: 1.22;
   font-weight: 800;
+}
+html:lang(fa) .label,
+html:lang(fa) .font-mono,
+html:lang(fa) .todo {
+  font-family: "Vazir FA", "Vazir FA Space", var(--font-jetbrains), ui-monospace, monospace;
 }
 html:lang(fa) .label {
   font-size: 0.82rem;

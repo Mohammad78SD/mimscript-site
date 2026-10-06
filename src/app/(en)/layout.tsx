@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import { SiteChrome } from "@/components/SiteChrome";
-import { montserrat, jetbrains, vazirmatnEn } from "@/lib/fonts";
+import { montserrat, jetbrains } from "@/lib/fonts";
 import { en } from "@/i18n/en";
 import { SITE } from "@/i18n/config";
 
@@ -25,7 +25,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="en"
       dir="ltr"
-      className={`${montserrat.variable} ${jetbrains.variable} ${vazirmatnEn.variable}`}
+      className={`${montserrat.variable} ${jetbrains.variable}`}
     >
       <body>
         <SiteChrome locale="en">{children}</SiteChrome>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "../globals.css";
 import { SiteChrome } from "@/components/SiteChrome";
-import { montserrat, jetbrains, vazirmatnFa } from "@/lib/fonts";
+import { montserrat, jetbrains } from "@/lib/fonts";
 import { fa } from "@/i18n/fa";
 import { SITE } from "@/i18n/config";
 
@@ -24,8 +24,12 @@ export default function RootLayoutFa({ children }: { children: React.ReactNode }
     <html
       lang="fa"
       dir="rtl"
-      className={`${montserrat.variable} ${jetbrains.variable} ${vazirmatnFa.variable}`}
+      className={`${montserrat.variable} ${jetbrains.variable}`}
     >
+      <head>
+        {/* Persian-only subset of Vazirmatn (self-hosted, see globals.css @font-face) */}
+        <link rel="preload" href="/fonts/vazirmatn-arabic.woff2" as="font" type="font/woff2" crossOrigin="" />
+      </head>
       <body>
         <SiteChrome locale="fa">{children}</SiteChrome>
       </body>

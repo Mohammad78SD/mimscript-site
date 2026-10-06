@@ -1,4 +1,4 @@
-import { Montserrat, JetBrains_Mono, Vazirmatn } from "next/font/google";
+import { Montserrat, JetBrains_Mono } from "next/font/google";
 
 export const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -11,19 +11,5 @@ export const jetbrains = JetBrains_Mono({
   display: "swap",
 });
 
-// Persian pages: preloaded, it is the main script there.
-export const vazirmatnFa = Vazirmatn({
-  variable: "--font-vazirmatn",
-  subsets: ["arabic"],
-  weight: ["400", "500", "700", "800"],
-  display: "swap",
-});
-// English pages: only for the odd Persian string (e.g. inside a project illustration).
-// Not preloaded; the unicode-range @font-face downloads it only when Persian glyphs render.
-export const vazirmatnEn = Vazirmatn({
-  variable: "--font-vazirmatn",
-  subsets: ["arabic"],
-  weight: ["400", "700"],
-  display: "swap",
-  preload: false,
-});
+// Persian (Vazirmatn) is self-hosted via @font-face in globals.css, limited to the
+// Arabic-script unicode-range, so Latin text always keeps Montserrat / JetBrains Mono.

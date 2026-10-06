@@ -231,7 +231,7 @@ function MahsaArt() {
           textAnchor="middle"
           lang="fa"
           className="font-fa"
-          style={{ fontFamily: "var(--font-vazirmatn), sans-serif" }}
+          style={{ fontFamily: '"Vazir FA", sans-serif' }}
         >
           حضور و غیاب
         </text>

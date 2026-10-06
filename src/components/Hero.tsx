@@ -1,0 +1,188 @@
+"use client";
+
+import dynamic from "next/dynamic";
+import { useEffect, useRef, useState } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
+import { Logo } from "./Logo";
+import type { HeroState } from "./HeroScene";
+
+gsap.registerPlugin(useGSAP, ScrollTrigger);
+
+const HeroCanvas = dynamic(() => import("./HeroScene"), { ssr: false });
+
+function hasWebGL() {
+  try {
+    const c = document.createElement("canvas");
+    return !!(c.getContext("webgl2") || c.getContext("webgl"));
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Pinned scroll story. The wrapper is 250vh tall on desktop; the stage inside
+ * is `sticky h-screen`. A ScrollTrigger-scrubbed GSAP timeline writes into the
+ * shared `state` object (explode / tint / zoom) that the R3F scene reads each
+ * frame, and animates the DOM layers (headline, dark overlay, canvas).
+ */
+export function Hero() {
+  const wrapper = useRef<HTMLDivElement>(null);
+  const headline = useRef<HTMLDivElement>(null);
+  const overlay = useRef<HTMLDivElement>(null);
+  const canvasWrap = useRef<HTMLDivElement>(null);
+  const hint = useRef<HTMLDivElement>(null);
+  const [state] = useState<HeroState>(() => ({
+    explode: 0,
+    tint: 0,
+    zoom: 0,
+    px: 0,
+    py: 0,
+  }));
+  const [webgl, setWebgl] = useState<boolean | null>(null);
+  const [reduced, setReduced] = useState(false);
+  const [inView, setInView] = useState(true);
+  const [ready, setReady] = useState(false);
+
+  /* Browser-only feature detection: must run after mount, never during SSR. */
+  /* eslint-disable react-hooks/set-state-in-effect */
+  useEffect(() => {
+    setWebgl(hasWebGL());
+    setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    const onMove = (e: PointerEvent) => {
+      state.px = (e.clientX / window.innerWidth) * 2 - 1;
+      state.py = (e.clientY / window.innerHeight) * 2 - 1;
+    };
+    window.addEventListener("pointermove", onMove, { passive: true });
+    const io = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: "100px" },
+    );
+    if (wrapper.current) io.observe(wrapper.current);
+    return () => {
+      window.removeEventListener("pointermove", onMove);
+      io.disconnect();
+    };
+  }, [state]);
+
+  useEffect(() => {
+    if (!webgl) return;
+    const t = setTimeout(() => setReady(true), 500);
+    return () => clearTimeout(t);
+  }, [webgl]);
+
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add(
+        "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
+        () => {
+          const tl = gsap.timeline({
+            defaults: { ease: "none" },
+            scrollTrigger: {
+              trigger: wrapper.current,
+              start: "top top",
+              end: "bottom bottom",
+              scrub: 0.6,
+            },
+          });
+          // 1. headline slides away while the logo breaks apart
+          tl.to(state, { explode: 1, duration: 1.6 }, 0)
+            .to(headline.current, { yPercent: -35, opacity: 0, duration: 0.9 }, 0)
+            .to(hint.current, { opacity: 0, duration: 0.3 }, 0)
+            // 2. background turns dark green, cubes turn light
+            .to(overlay.current, { opacity: 1, duration: 1.4 }, 0.8)
+            .to(state, { tint: 1, duration: 1.4 }, 0.8)
+            // 3. camera pushes through the network until the screen is green
+            .to(state, { zoom: 1, duration: 2.2, ease: "power1.in" }, 1.8)
+            .to(canvasWrap.current, { opacity: 0, duration: 0.6 }, 3.4);
+        },
+      );
+      return () => mm.revert();
+    },
+    { scope: wrapper },
+  );
+
+  const frameloop = reduced ? "demand" : inView ? "always" : "never";
+
+  return (
+    <div
+      ref={wrapper}
+      className="relative bg-paper md:motion-safe:h-[250vh]"
+    >
+      <div className="relative h-svh min-h-[560px] overflow-hidden md:motion-safe:sticky md:motion-safe:top-0 md:motion-safe:h-screen">
+        {/* dark layer that fades in behind the 3D scene */}
+        <div
+          ref={overlay}
+          className="absolute inset-0 bg-green-deep opacity-0"
+          aria-hidden="true"
+        />
+
+        {/* thin grid lines, kott-style */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 mx-auto grid max-w-[1600px] grid-cols-4 px-4 sm:px-8"
+        >
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="border-l border-ink/10 last:border-r" />
+          ))}
+        </div>
+
+        {/* headline */}
+        <div
+          ref={headline}
+          className="relative z-10 flex h-full flex-col justify-center px-4 pb-10 pt-24 sm:px-8"
+        >
+          <div className="mx-auto w-full max-w-[1600px]">
+            <p className="label mb-6 text-ink/70">MiM Script — Portfolio 2026</p>
+            <h1 className="display text-[clamp(3rem,10.5vw,10.5rem)]">
+              I build
+              <br />
+              systems that
+              <br />
+              <span className="inline-block bg-mint px-[0.1em] text-ink">ship</span>.
+            </h1>
+            <p className="label mt-8 max-w-md text-ink/80">
+              Software engineer · Python / Django · end-to-end systems
+            </p>
+          </div>
+        </div>
+
+        {/* SVG fallback while the canvas loads / without WebGL */}
+        <div
+          className={`pointer-events-none absolute inset-0 z-[5] flex items-center justify-center transition-opacity duration-500 md:justify-end md:pr-[14vw] ${
+            ready && webgl ? "opacity-0" : "opacity-100"
+          }`}
+          aria-hidden={webgl ? true : undefined}
+        >
+          <Logo
+            className="mt-24 h-[36vh] w-auto text-ink md:mt-0 md:h-[58vh]"
+            title={webgl === false ? "Logo: the Persian letter Mim" : undefined}
+          />
+        </div>
+
+        {/* 3D scene */}
+        <div
+          ref={canvasWrap}
+          className="absolute inset-0 z-[6]"
+          role="img"
+          aria-label="Animated logo built from cubes that turns into a network of nodes"
+        >
+          {webgl && (
+            <div className="h-full w-full">
+              <HeroCanvas state={state} frameloop={frameloop} animated={!reduced} />
+            </div>
+          )}
+        </div>
+
+        <div
+          ref={hint}
+          className="label absolute bottom-6 left-4 z-10 text-ink/60 sm:left-8"
+        >
+          Scroll ↓
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -70,11 +70,4 @@ export const clients: ClientSite[] = [
     region: "Iran",
     image: "/clients/sharkline-shop.webp",
   },
-  {
-    name: "AI Strategy — Sharif University",
-    url: "https://aistrategy.tsc.sharif.ir",
-    industry: "AI policy & strategy (Sharif University)",
-    region: "Iran",
-    image: "/clients/aistrategy-tsc-sharif-ir.webp",
-  },
 ];

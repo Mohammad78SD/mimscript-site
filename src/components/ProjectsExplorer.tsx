@@ -59,7 +59,6 @@ export function ProjectsExplorer() {
                   {p.pitch}
                 </p>
                 <p className="label mt-4 text-ink/60">
-                  {p.repo ? `${p.repo} · ` : ""}
                   {p.listMeta}
                 </p>
               </Link>

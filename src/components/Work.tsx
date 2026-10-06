@@ -10,28 +10,41 @@ export function Work() {
   const [active, setActive] = useState(0);
   const rows = useRef<(HTMLLIElement | null)[]>([]);
 
-  // the row crossing the vertical middle of the viewport is the active one
+  // Scroll decides: the row whose box contains the viewport's vertical middle is active.
+  // Rows are contiguous, so exactly one row matches; no observer thresholds to flicker.
+  // Hover only counts when the pointer really moves (a stationary pointer under a
+  // scrolling page must not fight the scroll).
   useEffect(() => {
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) {
-            const i = rows.current.indexOf(e.target as HTMLLIElement);
-            if (i >= 0) setActive(i);
-          }
-        }
-      },
-      { rootMargin: "-45% 0px -45% 0px" },
-    );
-    rows.current.forEach((r) => r && io.observe(r));
-    return () => io.disconnect();
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const mid = window.innerHeight / 2;
+      let best = -1;
+      rows.current.forEach((r, i) => {
+        if (!r) return;
+        const b = r.getBoundingClientRect();
+        if (b.top <= mid && b.bottom > mid) best = i;
+      });
+      if (best >= 0) setActive(best);
+    };
+    const schedule = () => {
+      if (!raf) raf = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule);
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   return (
     <section
       id="work"
       data-theme="dark"
-      className="relative z-10 bg-ink px-4 pb-24 pt-24 text-paper sm:px-8 md:motion-safe:-mt-[35vh] md:motion-safe:pt-[calc(15vh+4rem)]"
+      className="relative z-10 bg-ink px-4 pb-24 pt-24 text-paper sm:px-8 md:motion-safe:-mt-[55vh] md:motion-safe:pt-16"
     >
       <div className="mx-auto max-w-[1600px]">
         <div className="mb-14 text-blue-light">
@@ -46,15 +59,19 @@ export function Work() {
                 {featuredProjects.map((p, i) => (
                   <div
                     key={p.slug}
-                    className="absolute inset-0 transition-opacity duration-500"
-                    style={{ opacity: i === active ? 1 : 0 }}
+                    className={`absolute inset-0 bg-ink transition-opacity duration-[250ms] ease-out ${
+                      i === active ? "opacity-100" : "pointer-events-none opacity-0"
+                    }`}
                     aria-hidden={i !== active}
                   >
                     <ProjectVisual slug={p.slug} label={`${p.title} illustration`} />
                   </div>
                 ))}
               </div>
-              <p className="label mt-3 flex justify-between text-paper/60">
+              <p
+                key={active}
+                className="label mt-3 flex justify-between text-paper/60"
+              >
                 <span>{featuredProjects[active].title}</span>
                 <span>
                   {String(active + 1).padStart(2, "0")} /{" "}
@@ -79,14 +96,15 @@ export function Work() {
                   <Link
                     href={`/projects/${p.slug}`}
                     className="group block py-8 md:py-14"
-                    onMouseEnter={() => setActive(i)}
+                    onPointerMove={() => setActive(i)}
                     onFocus={() => setActive(i)}
                   >
                     <div
-                      className="flex flex-col gap-3 transition-transform duration-500 md:flex-row md:items-baseline md:justify-between md:gap-8"
-                      style={{ transform: on ? "translateX(1rem)" : "none" }}
+                      className={`flex flex-col gap-3 transition-[padding] duration-300 md:flex-row md:items-baseline md:justify-between md:gap-6 ${
+                        on ? "md:pl-4" : "md:pl-0"
+                      }`}
                     >
-                      <div className="flex items-baseline gap-4">
+                      <div className="flex min-w-0 items-baseline gap-4">
                         <span
                           className={`label transition-colors duration-300 ${
                             on ? "text-blue-light" : "text-paper/50"
@@ -94,12 +112,11 @@ export function Work() {
                         >
                           {String(i + 1).padStart(2, "0")}/
                         </span>
-                        <span className="display text-[clamp(2.2rem,5vw,4.5rem)]">
+                        <span className="display text-[clamp(2.2rem,4vw,4rem)] [overflow-wrap:anywhere]">
                           {p.title}
                         </span>
                       </div>
-                      <span className="label text-paper/60">
-                        {p.repo ? `${p.repo} · ` : ""}
+                      <span className="label text-paper/60 md:max-w-[40%] md:shrink md:text-right">
                         {p.listMeta}
                       </span>
                     </div>

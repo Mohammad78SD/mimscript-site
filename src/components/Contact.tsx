@@ -15,7 +15,7 @@ export function Contact() {
     >
       <div className="mx-auto max-w-[1600px]">
         <div className="text-blue-light">
-          <SectionLabel n="04">Contact</SectionLabel>
+          <SectionLabel n="05">Contact</SectionLabel>
         </div>
         <h2 className="display mt-10 text-[clamp(3rem,11vw,11rem)]">
           Let&apos;s build

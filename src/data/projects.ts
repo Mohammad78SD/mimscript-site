@@ -12,11 +12,11 @@ export type Project = {
   repo: string | null;
   pitch: string;
   categories: Category[];
-  /** Short mono meta shown in the work list, e.g. "DJANGO · 130 TESTS · CI" */
+  /** Short mono meta shown in the work list, e.g. "Django · 130 tests · CI" (no repo name; CSS uppercases it) */
   listMeta: string;
   role: string;
   stack: string[];
-  year: string | null; // null => TODO
+  year: string;
   status: string;
   github: string | null;
   featured: boolean;
@@ -36,10 +36,10 @@ export const projects: Project[] = [
     pitch:
       "A Lead SLA & outreach module for Django: a mini-CRM with a strict lifecycle and no lost updates.",
     categories: ["Django & APIs"],
-    listMeta: "DJANGO · 130 TESTS · CI",
-    role: "Author",
+    listMeta: "Django · 130 tests · CI",
+    role: "Sole developer",
     stack: ["Python", "Django", "DRF", "PostgreSQL", "pytest", "drf-spectacular"],
-    year: null,
+    year: "2026",
     status: "Public repository",
     github: "https://github.com/Mohammad78SD/leads",
     featured: true,
@@ -68,10 +68,10 @@ export const projects: Project[] = [
     pitch:
       "An HR system for a small company: attendance from RFID readers, lunch reservations, OTP login, push notifications, surveys and reports.",
     categories: ["Django & APIs"],
-    listMeta: "DJANGO 5.2 · 64 TESTS · PWA",
-    role: "Author",
+    listMeta: "Django 5.2 · 64 tests · PWA",
+    role: "Sole developer",
     stack: ["Python", "Django 5.2", "django-jalali", "PWA", "Web Push", "openpyxl"],
-    year: null,
+    year: "2024",
     status: "Public repository (built for Metafan, internal use)",
     github: "https://github.com/Mohammad78SD/mahsa",
     featured: true,
@@ -98,8 +98,8 @@ export const projects: Project[] = [
     pitch:
       "Event photo sharing: guests scan a QR code and upload from their phones, with moderation and a live projector wall. Built in about 5 days, used live at a real event.",
     categories: ["Django & APIs"],
-    listMeta: "DJANGO · CELERY · 90 TESTS",
-    role: "Author",
+    listMeta: "Django · Celery · 90 tests",
+    role: "Sole developer",
     stack: ["Python", "Django", "DRF", "PostgreSQL", "Redis", "Celery", "Docker", "nginx"],
     year: "2026",
     status: "Used live at a real event (Sept 2026)",
@@ -130,10 +130,10 @@ export const projects: Project[] = [
     pitch:
       "The REST API behind a tour booking platform: tours, hotels and pricing, reservations and OTP-by-SMS login.",
     categories: ["Django & APIs"],
-    listMeta: "DJANGO 5.2 · DRF · 57 TESTS",
-    role: "Backend developer",
+    listMeta: "Django 5.2 · DRF · 57 tests",
+    role: "Sole backend developer",
     stack: ["Python", "Django", "DRF", "JWT", "PostgreSQL", "Redis", "WeasyPrint"],
-    year: null,
+    year: "2024",
     status: "Public repository",
     github: "https://github.com/Mohammad78SD/rahorasm-backend",
     featured: true,
@@ -161,10 +161,10 @@ export const projects: Project[] = [
     pitch:
       "A WordPress plugin that sends WooCommerce order notifications to Telegram through a Cloudflare Worker relay.",
     categories: ["WordPress", "Tools"],
-    listMeta: "WORDPRESS · CLOUDFLARE WORKER · CI",
-    role: "Author",
+    listMeta: "WordPress · Cloudflare Worker · CI",
+    role: "Sole developer",
     stack: ["PHP", "WordPress", "WooCommerce", "Cloudflare Workers", "KV", "Telegram API"],
-    year: null,
+    year: "2026",
     status: "Public repository",
     github: "https://github.com/Mohammad78SD/mimify",
     featured: false,
@@ -191,10 +191,10 @@ export const projects: Project[] = [
     pitch:
       "One modular WordPress/WooCommerce plugin for a jewellery store, with one file per feature.",
     categories: ["WordPress"],
-    listMeta: "WORDPRESS · WOOCOMMERCE · REST",
-    role: "Author",
+    listMeta: "WordPress · WooCommerce · REST",
+    role: "Sole developer",
     stack: ["PHP", "WordPress", "WooCommerce", "REST API", "GitHub Releases"],
-    year: null,
+    year: "2026",
     status: "Public repository",
     github: "https://github.com/Mohammad78SD/lior-toolkit",
     featured: false,
@@ -219,10 +219,10 @@ export const projects: Project[] = [
     pitch:
       "A real-time seat reservation and ticketing platform with live seat maps.",
     categories: ["Django & APIs"],
-    listMeta: "DJANGO CHANNELS · REDIS · WEBSOCKETS",
-    role: "Backend engineer",
+    listMeta: "Channels · Redis · WebSockets",
+    role: "Sole developer",
     stack: ["Python", "Django", "Django Channels", "Redis", "PostgreSQL", "WebSockets"],
-    year: null,
+    year: "In progress",
     status: "Launching soon",
     github: null,
     featured: false,

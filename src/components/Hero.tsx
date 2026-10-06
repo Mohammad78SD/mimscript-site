@@ -95,26 +95,34 @@ export function Hero() {
                 // lets the fixed header know which colour is under it
                 if (wrapper.current)
                   wrapper.current.dataset.theme =
-                    self.progress > 0.4 ? "dark" : "light";
+                    self.progress > 0.58 ? "dark" : "light";
               },
             },
           });
           // 1. headline slides away while the logo breaks apart
-          tl.to(state, { explode: 1, duration: 1.6 }, 0)
+          tl.to(state, { explode: 1, duration: 1.5 }, 0)
             .to(headline.current, { yPercent: -35, opacity: 0, duration: 0.9 }, 0)
             .to(hint.current, { opacity: 0, duration: 0.3 }, 0)
-            // 2. background turns ink, cubes turn light blue-grey
-            .to(overlay.current, { opacity: 1, duration: 1.4 }, 0.8)
-            .to(state, { tint: 1, duration: 1.4 }, 0.8)
+            // 2. paper stays until the network is formed (explode ends at 1.6), then an
+            //    ink circle wipes out of the hub in ~15% of the scroll: no blended grey frame
+            .fromTo(
+              overlay.current,
+              { clipPath: "circle(0% at 50% 50%)" },
+              { clipPath: "circle(150% at 50% 50%)", duration: 0.5, ease: "power2.in" },
+              1.6,
+            )
+            .to(state, { tint: 1, duration: 0.45 }, 1.7)
             .to(
               grid.current ? Array.from(grid.current.children) : [],
-              { borderColor: "rgba(255,255,255,0.14)", duration: 1.4 },
-              0.8,
+              { borderColor: "rgba(255,255,255,0.14)", duration: 0.4 },
+              1.85,
             )
             // 3. camera pushes into the network, the screen ends up ink
-            .to(state, { zoom: 1, duration: 1.4, ease: "power1.in" }, 2.0)
-            .to(canvasWrap.current, { opacity: 0, duration: 0.4 }, 3.1)
-            .to(grid.current, { opacity: 0, duration: 0.4 }, 3.1);
+            .to(state, { zoom: 1, duration: 0.7, ease: "power1.in" }, 1.8)
+            .to(canvasWrap.current, { opacity: 0, duration: 0.3 }, 2.1)
+            .to(grid.current, { opacity: 0, duration: 0.3 }, 2.1)
+            // trailing pad: the Work section slides up over the (already ink) stage here
+            .to({}, { duration: 0.7 }, 2.5);
         },
       );
       return () => mm.revert();
@@ -128,13 +136,13 @@ export function Hero() {
     <div
       ref={wrapper}
       data-theme="light"
-      className="relative bg-paper md:motion-safe:h-[280vh]"
+      className="relative bg-paper md:motion-safe:h-[250vh]"
     >
       <div className="relative h-svh min-h-[560px] overflow-hidden md:motion-safe:sticky md:motion-safe:top-0 md:motion-safe:h-screen">
         {/* dark layer that fades in behind the 3D scene */}
         <div
           ref={overlay}
-          className="absolute inset-0 bg-ink opacity-0"
+          className="absolute inset-0 bg-ink [clip-path:circle(0%_at_50%_50%)]"
           aria-hidden="true"
         />
 

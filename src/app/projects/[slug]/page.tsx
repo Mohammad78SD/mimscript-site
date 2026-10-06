@@ -32,7 +32,7 @@ export default async function ProjectPage({
   const meta: [string, React.ReactNode][] = [
     ["Role", p.role],
     ["Stack", p.stack.join(" · ")],
-    ["Year", p.year ?? <Todo key="y" />],
+    ["Year", p.year],
     ["Status", p.status],
   ];
 

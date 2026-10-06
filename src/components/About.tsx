@@ -51,7 +51,7 @@ export function About() {
   return (
     <section id="about" data-theme="light" ref={root} className="px-4 py-24 sm:px-8 md:py-36">
       <div className="mx-auto max-w-[1600px]">
-        <SectionLabel n="03">About</SectionLabel>
+        <SectionLabel n="04">About</SectionLabel>
         <p className="statement display mt-10 max-w-6xl text-[clamp(2rem,5.2vw,5rem)] !leading-[1.05]">
           {statement.split(" ").map((w, i) => (
             <span key={i} className="word inline-block pr-[0.25em]" style={{ color: "#0E1220" }}>

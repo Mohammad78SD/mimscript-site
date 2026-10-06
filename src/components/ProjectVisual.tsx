@@ -23,6 +23,7 @@ export function ProjectVisual({ slug, className, label }: Props) {
   return (
     <div
       className={`absolute inset-0 overflow-hidden bg-ink ${className ?? ""}`}
+      dir="ltr"
       role="img"
       aria-label={label ?? `${slug} illustration`}
     >
@@ -228,6 +229,9 @@ function MahsaArt() {
           fontWeight="700"
           fill={PAPER}
           textAnchor="middle"
+          lang="fa"
+          className="font-fa"
+          style={{ fontFamily: "var(--font-vazirmatn), sans-serif" }}
         >
           حضور و غیاب
         </text>

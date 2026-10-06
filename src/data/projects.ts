@@ -1,3 +1,6 @@
+import type { Locale } from "@/i18n/config";
+import { projectsFa } from "./projects.fa";
+
 // Single source of truth for all project pages.
 // RULE: only facts taken from the repos / owner. Unknown values are `null`
 // and render as a visible dashed "TODO" in the UI.
@@ -255,4 +258,11 @@ export function getProject(slug: string) {
 export function nextProject(slug: string) {
   const i = projects.findIndex((p) => p.slug === slug);
   return projects[(i + 1) % projects.length];
+}
+
+/** Project with its text fields replaced by the Persian version when locale is "fa". */
+export function localizeProject(p: Project, locale: Locale): Project {
+  if (locale !== "fa") return p;
+  const t = projectsFa[p.slug];
+  return t ? { ...p, ...t, note: t.note } : p;
 }

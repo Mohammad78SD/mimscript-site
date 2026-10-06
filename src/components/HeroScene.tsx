@@ -232,7 +232,15 @@ function shadowTexture() {
   return new THREE.CanvasTexture(c);
 }
 
-function Scene({ state, animated }: { state: HeroState; animated: boolean }) {
+function Scene({
+  state,
+  animated,
+  mirror,
+}: {
+  state: HeroState;
+  animated: boolean;
+  mirror: boolean;
+}) {
   const d = useMemo(() => buildData(), []);
   const shadowTex = useMemo(() => shadowTexture(), []);
   const outer = useRef<THREE.Group>(null);
@@ -404,7 +412,7 @@ function Scene({ state, animated }: { state: HeroState; animated: boolean }) {
     if (outer.current) {
       const logoW = LOGO_H * LOGO_ASPECT;
       const k0 = wide ? Math.min(1, (viewW * 0.34) / logoW, (viewH * 0.74) / LOGO_H) : Math.min(1, (viewW * 0.7) / logoW, 0.9);
-      const logoX = wide ? viewW * 0.3 : 0;
+      const logoX = wide ? viewW * 0.3 * (mirror ? -1 : 1) : 0; // RTL: logo on the left
       const logoY = wide ? 0 : -viewH * 0.2;
       const netK = Math.min(1, (viewW * 0.92) / (NET_HALF_W * 2));
       outer.current.position.x = logoX * (1 - ee);
@@ -488,10 +496,12 @@ export default function HeroCanvas({
   state,
   frameloop,
   animated,
+  mirror = false,
 }: {
   state: HeroState;
   frameloop: "always" | "demand" | "never";
   animated: boolean;
+  mirror?: boolean;
 }) {
   return (
     <Canvas
@@ -501,7 +511,7 @@ export default function HeroCanvas({
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       aria-hidden="true"
     >
-      <Scene state={state} animated={animated} />
+      <Scene state={state} animated={animated} mirror={mirror} />
     </Canvas>
   );
 }

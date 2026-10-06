@@ -14,8 +14,9 @@
   --color-ink: var(--ink);
   --color-blue: var(--blue);
   --color-blue-light: var(--blue-light);
-  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+  /* Latin glyphs come from the first font, Persian glyphs fall through to Vazirmatn */
+  --font-sans: var(--font-montserrat), var(--font-vazirmatn), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), var(--font-vazirmatn), ui-monospace, monospace;
 }
 
 html {
@@ -36,6 +37,32 @@ body {
   font-family: var(--font-sans);
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
+}
+
+/* ---- Persian (lang="fa" / dir="rtl") ---- */
+/* Persian text that appears on English pages (e.g. inside an illustration). */
+.font-fa {
+  font-family: var(--font-vazirmatn), var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+}
+/* Main font on Persian pages: Latin tech names keep Montserrat, Persian uses Vazirmatn. */
+html:lang(fa) body {
+  font-family: var(--font-sans);
+  line-height: 1.7;
+}
+/* Letter-spacing breaks Arabic-script joining; tight display line-height clips Persian marks. */
+:lang(fa) *,
+:lang(fa) {
+  letter-spacing: 0 !important;
+}
+html:lang(fa) .display {
+  line-height: 1.22;
+  font-weight: 800;
+}
+html:lang(fa) .label {
+  font-size: 0.82rem;
+}
+html:lang(fa) .statement {
+  line-height: 1.5 !important;
 }
 
 ::selection {
@@ -81,6 +108,11 @@ body {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+@keyframes vis-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes cube-pop {

@@ -4,16 +4,17 @@ import { Services } from "@/components/Services";
 import { ClientSection } from "@/components/ClientSection";
 import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
+import type { Locale } from "@/i18n";
 
-export default function Home() {
+export function HomePage({ locale }: { locale: Locale }) {
   return (
     <>
-      <Hero />
-      <Work />
-      <Services />
-      <ClientSection />
-      <About />
-      <Contact />
+      <Hero locale={locale} />
+      <Work locale={locale} />
+      <Services locale={locale} />
+      <ClientSection locale={locale} />
+      <About locale={locale} />
+      <Contact locale={locale} />
     </>
   );
 }

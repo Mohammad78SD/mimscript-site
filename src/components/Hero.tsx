@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { Logo } from "./Logo";
 import type { HeroState } from "./HeroScene";
+import { getDict, isRtl, type Locale } from "@/i18n";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
@@ -27,7 +28,9 @@ function hasWebGL() {
  * shared `state` object (explode / tint / zoom) that the R3F scene reads each
  * frame, and animates the DOM layers (headline, dark overlay, canvas).
  */
-export function Hero() {
+export function Hero({ locale }: { locale: Locale }) {
+  const t = getDict(locale);
+  const rtl = isRtl(locale);
   const wrapper = useRef<HTMLDivElement>(null);
   const headline = useRef<HTMLDivElement>(null);
   const overlay = useRef<HTMLDivElement>(null);
@@ -153,7 +156,7 @@ export function Hero() {
           className="pointer-events-none absolute inset-0 mx-auto grid max-w-[1600px] grid-cols-4 px-4 sm:px-8"
         >
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="border-l border-ink/[.12] last:border-r" />
+            <div key={i} className="border-s border-ink/[.12] last:border-e" />
           ))}
         </div>
 
@@ -163,30 +166,33 @@ export function Hero() {
           className="relative z-10 flex h-full flex-col justify-start px-4 pb-10 pt-28 sm:px-8 md:justify-center md:pt-24"
         >
           <div className="mx-auto w-full max-w-[1600px]">
-            <p className="label mb-6 text-ink/70">MiM Script — Portfolio 2026</p>
-            <h1 className="display text-[clamp(2.6rem,11.5vw,5rem)] md:max-w-[58vw] md:text-[clamp(3rem,7.2vw,8.75rem)]">
-              I build
-              <br />
-              systems that
-              <br />
-              <span className="inline-block bg-blue px-[0.1em] text-paper">ship</span>.
+            <p className="label mb-6 text-ink/70">{t.hero.eyebrow}</p>
+            <h1 className="display text-[clamp(2.6rem,11.5vw,5rem)] md:max-w-[58vw] md:text-[clamp(3rem,7.2vw,8.75rem)] rtl:text-[clamp(2.2rem,9.5vw,4.2rem)] rtl:md:max-w-[56vw] rtl:md:text-[clamp(2.6rem,5.6vw,7rem)]">
+              {t.hero.headline.lines.map((l) => (
+                <span key={l}>
+                  {l}
+                  <br />
+                </span>
+              ))}
+              <span className="inline-block bg-blue px-[0.1em] text-paper">
+                {t.hero.headline.hl}
+              </span>
+              {t.hero.headline.after}
             </h1>
-            <p className="label mt-8 max-w-md text-ink/80">
-              Software engineer · Python / Django · end-to-end systems
-            </p>
+            <p className="label mt-8 max-w-md text-ink/80">{t.hero.sub}</p>
           </div>
         </div>
 
         {/* SVG fallback while the canvas loads / without WebGL */}
         <div
-          className={`pointer-events-none absolute inset-0 z-[5] flex items-center justify-center transition-opacity duration-500 md:left-auto md:w-[40%] ${
+          className={`pointer-events-none absolute inset-0 z-[5] flex items-center justify-center transition-opacity duration-500 ltr:md:left-auto rtl:md:right-auto md:w-[40%] ${
             ready && webgl ? "opacity-0" : "opacity-100"
           }`}
           aria-hidden={webgl ? true : undefined}
         >
           <Logo
             className="mt-64 h-[30vh] w-auto text-ink md:mt-0 md:h-[70vh]"
-            title={webgl === false ? "Logo: the Persian letter Mim" : undefined}
+            title={webgl === false ? t.hero.logoTitle : undefined}
           />
         </div>
 
@@ -195,20 +201,20 @@ export function Hero() {
           ref={canvasWrap}
           className="absolute inset-0 z-[6]"
           role="img"
-          aria-label="Animated logo built from cubes that turns into a network of nodes"
+          aria-label={t.hero.canvasLabel}
         >
           {webgl && (
             <div className="h-full w-full">
-              <HeroCanvas state={state} frameloop={frameloop} animated={!reduced} />
+              <HeroCanvas state={state} frameloop={frameloop} animated={!reduced} mirror={rtl} />
             </div>
           )}
         </div>
 
         <div
           ref={hint}
-          className="label absolute bottom-6 left-4 z-10 text-ink/60 sm:left-8"
+          className="label absolute bottom-6 start-4 z-10 text-ink/60 sm:start-8"
         >
-          Scroll ↓
+          {t.hero.scroll}
         </div>
       </div>
     </div>

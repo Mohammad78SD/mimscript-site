@@ -19,7 +19,6 @@ export const clients: ClientSite[] = [
     name: "Lior Jewellery",
     url: "https://lior-jewellery.com",
     industry: "Jewellery e-commerce (WooCommerce)",
-    // TODO: replace screenshot (current one shows a newsletter popup)
     image: "/clients/lior-jewellery-com.webp",
     related: { href: "/projects/lior-toolkit", label: "Custom plugin: Lior Toolkit" },
   },
@@ -49,8 +48,7 @@ export const clients: ClientSite[] = [
     url: "https://solacemed.ir",
     industry: "Skincare products",
     region: "Iran",
-    // TODO: add public/clients/solacemed-ir.webp and set the path here (placeholder is shown while null)
-    image: null,
+    image: "/clients/solacemed-ir.webp",
   },
   {
     name: "Helensa",

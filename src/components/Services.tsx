@@ -45,21 +45,21 @@ const services = [
 
 export function Services() {
   return (
-    <section id="services" className="px-4 py-24 sm:px-8">
+    <section id="services" data-theme="light" className="px-4 py-24 sm:px-8">
       <div className="mx-auto max-w-[1600px]">
         <SectionLabel n="02">What I do</SectionLabel>
         <h2 className="display mt-8 max-w-4xl text-[clamp(2.4rem,6vw,5.5rem)]">
-          Whole systems, from API to <span className="bg-mint px-[0.1em]">server</span>.
+          Whole systems. From API to <span className="bg-blue px-[0.1em] text-paper">server</span>.
         </h2>
 
-        <ul className="mt-16 grid border-l border-t border-ink/20 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-16 grid border-l border-t border-ink/[.12] sm:grid-cols-2 lg:grid-cols-4">
           {services.map((s, i) => (
             <li
               key={s.title}
-              className="group flex min-h-[18rem] flex-col justify-between border-b border-r border-ink/20 p-6 transition-colors duration-300 hover:bg-green hover:text-paper"
+              className="group flex min-h-[18rem] flex-col justify-between border-b border-r border-ink/[.12] p-6 transition-colors duration-300 hover:bg-ink hover:text-paper"
             >
               <div>
-                <span className="label text-ink/50 group-hover:text-mint">
+                <span className="label text-ink/50 group-hover:text-blue-light">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <h3 className="mt-4 text-2xl font-bold leading-tight tracking-tight">

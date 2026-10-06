@@ -8,19 +8,23 @@ const links = [
 
 export function Contact() {
   return (
-    <section id="contact" className="bg-green px-4 pt-24 text-paper sm:px-8">
+    <section
+      id="contact"
+      data-theme="dark"
+      className="bg-ink px-4 pt-24 text-paper sm:px-8"
+    >
       <div className="mx-auto max-w-[1600px]">
-        <div className="text-mint">
+        <div className="text-blue-light">
           <SectionLabel n="04">Contact</SectionLabel>
         </div>
         <h2 className="display mt-10 text-[clamp(3rem,11vw,11rem)]">
           Let&apos;s build
           <br />
-          something<span className="text-mint">.</span>
+          something<span className="text-blue-light">.</span>
         </h2>
-        <ul className="mt-16 border-t border-paper/20">
+        <ul className="mt-16 border-t border-paper/[.14]">
           {links.map((l) => (
-            <li key={l.label} className="border-b border-paper/20">
+            <li key={l.label} className="border-b border-paper/[.14]">
               <a
                 href={l.href}
                 {...(l.href.startsWith("http")
@@ -29,7 +33,7 @@ export function Contact() {
                 className="group flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:justify-between"
               >
                 <span className="label text-paper/60">{l.label}</span>
-                <span className="break-all text-xl font-semibold tracking-tight transition-colors group-hover:text-mint sm:text-3xl">
+                <span className="break-all text-xl font-semibold tracking-tight transition-colors group-hover:text-blue-light sm:text-3xl">
                   {l.text} <span aria-hidden="true">↗</span>
                 </span>
               </a>

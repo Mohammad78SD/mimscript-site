@@ -1,19 +1,19 @@
 @import "tailwindcss";
 
 :root {
-  --paper: #f1f2ef;
-  --ink: #0f1414;
-  --green: #1b4441;
-  --green-deep: #0e2c2c;
-  --mint: #a8d5c8;
+  --paper: #f2f2f0;
+  --ink: #0e1220;
+  --blue: #1f3a93;
+  --blue-light: #7c9bff;
+  --line-dark: rgba(255, 255, 255, 0.14);
+  --line-light: rgba(14, 18, 32, 0.12);
 }
 
 @theme inline {
   --color-paper: var(--paper);
   --color-ink: var(--ink);
-  --color-green: var(--green);
-  --color-green-deep: var(--green-deep);
-  --color-mint: var(--mint);
+  --color-blue: var(--blue);
+  --color-blue-light: var(--blue-light);
   --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, monospace;
 }
@@ -39,12 +39,12 @@ body {
 }
 
 ::selection {
-  background: var(--mint);
+  background: var(--blue-light);
   color: var(--ink);
 }
 
 :focus-visible {
-  outline: 2px solid var(--mint);
+  outline: 2px solid var(--blue-light);
   outline-offset: 3px;
 }
 
@@ -92,4 +92,40 @@ body {
     opacity: 1;
     transform: scale(1);
   }
+}
+
+/* ---- ProjectVisual animations (all neutralised by the reduced-motion rule above) ---- */
+.vis-anim {
+  transform-box: fill-box;
+}
+@keyframes vis-hl {
+  0% { opacity: 1; }
+  22% { opacity: 1; }
+  28% { opacity: 0; }
+  100% { opacity: 0; }
+}
+@keyframes vis-bar {
+  0% { transform: scaleX(0.04); }
+  70%, 92% { transform: scaleX(1); }
+  100% { transform: scaleX(0.04); }
+}
+@keyframes vis-take {
+  0%, 25% { opacity: 0; }
+  35%, 85% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes vis-scan {
+  from { transform: translateY(0); }
+  to { transform: translateY(64px); }
+}
+@keyframes vis-tile {
+  0%, 8% { opacity: 0.12; }
+  22%, 88% { opacity: 1; }
+  100% { opacity: 0.12; }
+}
+@keyframes vis-slide {
+  0% { transform: translateX(0); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 1; }
+  100% { transform: translateX(var(--d)); opacity: 0; }
 }

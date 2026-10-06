@@ -32,6 +32,7 @@ export function Hero() {
   const headline = useRef<HTMLDivElement>(null);
   const overlay = useRef<HTMLDivElement>(null);
   const canvasWrap = useRef<HTMLDivElement>(null);
+  const grid = useRef<HTMLDivElement>(null);
   const hint = useRef<HTMLDivElement>(null);
   const [state] = useState<HeroState>(() => ({
     explode: 0,
@@ -68,7 +69,11 @@ export function Hero() {
 
   useEffect(() => {
     if (!webgl) return;
-    const t = setTimeout(() => setReady(true), 500);
+    // the canvas mounts after hydration; re-measure pinned/scrubbed triggers once it is in
+    const t = setTimeout(() => {
+      setReady(true);
+      ScrollTrigger.refresh();
+    }, 500);
     return () => clearTimeout(t);
   }, [webgl]);
 
@@ -85,18 +90,31 @@ export function Hero() {
               start: "top top",
               end: "bottom bottom",
               scrub: 0.6,
+              invalidateOnRefresh: true,
+              onUpdate: (self) => {
+                // lets the fixed header know which colour is under it
+                if (wrapper.current)
+                  wrapper.current.dataset.theme =
+                    self.progress > 0.4 ? "dark" : "light";
+              },
             },
           });
           // 1. headline slides away while the logo breaks apart
           tl.to(state, { explode: 1, duration: 1.6 }, 0)
             .to(headline.current, { yPercent: -35, opacity: 0, duration: 0.9 }, 0)
             .to(hint.current, { opacity: 0, duration: 0.3 }, 0)
-            // 2. background turns dark green, cubes turn light
+            // 2. background turns ink, cubes turn light blue-grey
             .to(overlay.current, { opacity: 1, duration: 1.4 }, 0.8)
             .to(state, { tint: 1, duration: 1.4 }, 0.8)
-            // 3. camera pushes through the network until the screen is green
-            .to(state, { zoom: 1, duration: 2.2, ease: "power1.in" }, 1.8)
-            .to(canvasWrap.current, { opacity: 0, duration: 0.6 }, 3.4);
+            .to(
+              grid.current ? Array.from(grid.current.children) : [],
+              { borderColor: "rgba(255,255,255,0.14)", duration: 1.4 },
+              0.8,
+            )
+            // 3. camera pushes into the network, the screen ends up ink
+            .to(state, { zoom: 1, duration: 1.4, ease: "power1.in" }, 2.0)
+            .to(canvasWrap.current, { opacity: 0, duration: 0.4 }, 3.1)
+            .to(grid.current, { opacity: 0, duration: 0.4 }, 3.1);
         },
       );
       return () => mm.revert();
@@ -109,39 +127,41 @@ export function Hero() {
   return (
     <div
       ref={wrapper}
-      className="relative bg-paper md:motion-safe:h-[250vh]"
+      data-theme="light"
+      className="relative bg-paper md:motion-safe:h-[280vh]"
     >
       <div className="relative h-svh min-h-[560px] overflow-hidden md:motion-safe:sticky md:motion-safe:top-0 md:motion-safe:h-screen">
         {/* dark layer that fades in behind the 3D scene */}
         <div
           ref={overlay}
-          className="absolute inset-0 bg-green-deep opacity-0"
+          className="absolute inset-0 bg-ink opacity-0"
           aria-hidden="true"
         />
 
         {/* thin grid lines, kott-style */}
         <div
+          ref={grid}
           aria-hidden="true"
           className="pointer-events-none absolute inset-0 mx-auto grid max-w-[1600px] grid-cols-4 px-4 sm:px-8"
         >
           {[0, 1, 2, 3].map((i) => (
-            <div key={i} className="border-l border-ink/10 last:border-r" />
+            <div key={i} className="border-l border-ink/[.12] last:border-r" />
           ))}
         </div>
 
         {/* headline */}
         <div
           ref={headline}
-          className="relative z-10 flex h-full flex-col justify-center px-4 pb-10 pt-24 sm:px-8"
+          className="relative z-10 flex h-full flex-col justify-start px-4 pb-10 pt-28 sm:px-8 md:justify-center md:pt-24"
         >
           <div className="mx-auto w-full max-w-[1600px]">
             <p className="label mb-6 text-ink/70">MiM Script — Portfolio 2026</p>
-            <h1 className="display text-[clamp(3rem,10.5vw,10.5rem)]">
+            <h1 className="display text-[clamp(2.6rem,11.5vw,5rem)] md:max-w-[58vw] md:text-[clamp(3rem,7.2vw,8.75rem)]">
               I build
               <br />
               systems that
               <br />
-              <span className="inline-block bg-mint px-[0.1em] text-ink">ship</span>.
+              <span className="inline-block bg-blue px-[0.1em] text-paper">ship</span>.
             </h1>
             <p className="label mt-8 max-w-md text-ink/80">
               Software engineer · Python / Django · end-to-end systems
@@ -151,13 +171,13 @@ export function Hero() {
 
         {/* SVG fallback while the canvas loads / without WebGL */}
         <div
-          className={`pointer-events-none absolute inset-0 z-[5] flex items-center justify-center transition-opacity duration-500 md:justify-end md:pr-[14vw] ${
+          className={`pointer-events-none absolute inset-0 z-[5] flex items-center justify-center transition-opacity duration-500 md:left-auto md:w-[40%] ${
             ready && webgl ? "opacity-0" : "opacity-100"
           }`}
           aria-hidden={webgl ? true : undefined}
         >
           <Logo
-            className="mt-24 h-[36vh] w-auto text-ink md:mt-0 md:h-[58vh]"
+            className="mt-64 h-[30vh] w-auto text-ink md:mt-0 md:h-[70vh]"
             title={webgl === false ? "Logo: the Persian letter Mim" : undefined}
           />
         </div>

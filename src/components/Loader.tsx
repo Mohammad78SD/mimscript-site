@@ -5,7 +5,7 @@ import { rasterizeMim } from "@/lib/voxels";
 
 const KEY = "mim-loader-seen";
 
-/** ~1.2s intro: the «م» assembled from cubes, one of them mint. */
+/** ~1.2s intro: the «م» assembled from cubes, one of them blue. */
 export function Loader() {
   const [phase, setPhase] = useState<"show" | "fade" | "done">("show");
   const [grid, setGrid] = useState<ReturnType<typeof rasterizeMim> | null>(null);
@@ -36,7 +36,7 @@ export function Loader() {
 
   if (phase === "done") return null;
 
-  const mint = grid ? Math.floor(grid.cells.length * 0.22) : -1;
+  const special = grid ? Math.floor(grid.cells.length * 0.22) : -1;
 
   return (
     <div
@@ -61,7 +61,7 @@ export function Loader() {
                 top: r * 7,
                 width: 6,
                 height: 6,
-                background: i === mint ? "#A8D5C8" : i % 3 ? "#0F1414" : "#1B4441",
+                background: i === special ? "#1F3A93" : i % 3 ? "#0E1220" : "#2a3350",
                 animation: `cube-pop 380ms cubic-bezier(.2,.8,.2,1) ${
                   ((c + r) % 22) * 22
                 }ms both`,

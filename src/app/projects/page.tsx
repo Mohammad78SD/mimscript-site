@@ -12,11 +12,11 @@ export const metadata: Metadata = {
 export default function ProjectsPage() {
   return (
     <>
-      <section className="px-4 pb-24 pt-32 sm:px-8">
+      <section data-theme="light" className="px-4 pb-24 pt-32 sm:px-8">
         <div className="mx-auto max-w-[1600px]">
           <SectionLabel n="00">All projects</SectionLabel>
           <h1 className="display mb-12 mt-8 text-[clamp(3rem,9vw,9rem)]">
-            Projects<span className="text-green">.</span>
+            Projects<span className="text-blue">.</span>
           </h1>
           <ProjectsExplorer />
         </div>

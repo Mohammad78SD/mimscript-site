@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { featuredProjects } from "@/data/projects";
-import { ProjectCover } from "./ProjectCover";
+import { ProjectVisual } from "./ProjectVisual";
 import { SectionLabel } from "./SectionLabel";
 
 export function Work() {
@@ -30,10 +30,11 @@ export function Work() {
   return (
     <section
       id="work"
-      className="bg-green-deep px-4 pb-24 pt-24 text-paper sm:px-8"
+      data-theme="dark"
+      className="relative z-10 bg-ink px-4 pb-24 pt-24 text-paper sm:px-8 md:motion-safe:-mt-[35vh] md:motion-safe:pt-[calc(15vh+4rem)]"
     >
       <div className="mx-auto max-w-[1600px]">
-        <div className="mb-14 text-mint">
+        <div className="mb-14 text-blue-light">
           <SectionLabel n="01">Selected work</SectionLabel>
         </div>
 
@@ -41,7 +42,7 @@ export function Work() {
           {/* sticky preview */}
           <div className="hidden md:block">
             <div className="sticky top-24">
-              <div className="relative aspect-[4/3] w-full overflow-hidden border border-paper/20 bg-green">
+              <div className="relative aspect-[4/3] w-full overflow-hidden border border-paper/[.14] bg-ink">
                 {featuredProjects.map((p, i) => (
                   <div
                     key={p.slug}
@@ -49,7 +50,7 @@ export function Work() {
                     style={{ opacity: i === active ? 1 : 0 }}
                     aria-hidden={i !== active}
                   >
-                    <ProjectCover project={p} sizes="40vw" />
+                    <ProjectVisual slug={p.slug} label={`${p.title} illustration`} />
                   </div>
                 ))}
               </div>
@@ -64,7 +65,7 @@ export function Work() {
           </div>
 
           {/* list */}
-          <ol className="border-t border-paper/20">
+          <ol className="border-t border-paper/[.14]">
             {featuredProjects.map((p, i) => {
               const on = i === active;
               return (
@@ -73,7 +74,7 @@ export function Work() {
                   ref={(el) => {
                     rows.current[i] = el;
                   }}
-                  className="border-b border-paper/20"
+                  className="border-b border-paper/[.14]"
                 >
                   <Link
                     href={`/projects/${p.slug}`}
@@ -88,7 +89,7 @@ export function Work() {
                       <div className="flex items-baseline gap-4">
                         <span
                           className={`label transition-colors duration-300 ${
-                            on ? "text-mint" : "text-paper/50"
+                            on ? "text-blue-light" : "text-paper/50"
                           }`}
                         >
                           {String(i + 1).padStart(2, "0")}/
@@ -97,10 +98,13 @@ export function Work() {
                           {p.title}
                         </span>
                       </div>
-                      <span className="label text-paper/60">{p.listMeta}</span>
+                      <span className="label text-paper/60">
+                        {p.repo ? `${p.repo} · ` : ""}
+                        {p.listMeta}
+                      </span>
                     </div>
-                    <div className="relative mt-5 aspect-[16/9] overflow-hidden border border-paper/20 md:hidden">
-                      <ProjectCover project={p} sizes="100vw" />
+                    <div className="relative mt-5 aspect-[16/9] overflow-hidden border border-paper/[.14] md:hidden">
+                      <ProjectVisual slug={p.slug} label={`${p.title} illustration`} />
                     </div>
                   </Link>
                 </li>
@@ -112,7 +116,7 @@ export function Work() {
         <div className="mt-12 flex justify-end">
           <Link
             href="/projects"
-            className="label border-b border-mint pb-1 text-mint hover:opacity-80"
+            className="label border-b border-blue-light pb-1 text-blue-light hover:opacity-80"
           >
             All projects →
           </Link>

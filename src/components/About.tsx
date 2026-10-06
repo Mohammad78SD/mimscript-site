@@ -29,9 +29,9 @@ export function About() {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         gsap.fromTo(
           ".word",
-          { color: "#b9bcb8" },
+          { color: "#b8bac2" },
           {
-            color: "#0F1414",
+            color: "#0E1220",
             ease: "none",
             stagger: 0.12,
             scrollTrigger: {
@@ -49,21 +49,21 @@ export function About() {
   );
 
   return (
-    <section id="about" ref={root} className="px-4 py-24 sm:px-8 md:py-36">
+    <section id="about" data-theme="light" ref={root} className="px-4 py-24 sm:px-8 md:py-36">
       <div className="mx-auto max-w-[1600px]">
         <SectionLabel n="03">About</SectionLabel>
         <p className="statement display mt-10 max-w-6xl text-[clamp(2rem,5.2vw,5rem)] !leading-[1.05]">
           {statement.split(" ").map((w, i) => (
-            <span key={i} className="word inline-block pr-[0.25em]" style={{ color: "#0F1414" }}>
+            <span key={i} className="word inline-block pr-[0.25em]" style={{ color: "#0E1220" }}>
               {w}
             </span>
           ))}
         </p>
-        <dl className="mt-20 grid border-t border-ink/20 md:grid-cols-3">
+        <dl className="mt-20 grid border-t border-ink/[.12] md:grid-cols-3">
           {facts.map((f) => (
             <div
               key={f.k}
-              className="border-b border-ink/20 py-6 md:border-b-0 md:border-r md:px-6 md:first:pl-0 md:last:border-r-0"
+              className="border-b border-ink/[.12] py-6 md:border-b-0 md:border-r md:px-6 md:first:pl-0 md:last:border-r-0"
             >
               <dt className="label text-ink/50">{f.k}</dt>
               <dd className="mt-3 max-w-sm text-base leading-relaxed">{f.v}</dd>

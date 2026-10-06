@@ -6,7 +6,10 @@ export type Category = "Django & APIs" | "WordPress" | "Tools";
 
 export type Project = {
   slug: string;
+  /** Display name */
   title: string;
+  /** GitHub repo name, shown in small mono meta; null when private */
+  repo: string | null;
   pitch: string;
   categories: Category[];
   /** Short mono meta shown in the work list, e.g. "DJANGO · 130 TESTS · CI" */
@@ -16,8 +19,6 @@ export type Project = {
   year: string | null; // null => TODO
   status: string;
   github: string | null;
-  /** Temporary preview image. TODO: replace with real screenshots. */
-  image: string | null;
   featured: boolean;
   note?: string;
   problem: string;
@@ -30,7 +31,8 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: "leads",
-    title: "leads",
+    repo: "leads",
+    title: "Leads",
     pitch:
       "A Lead SLA & outreach module for Django: a mini-CRM with a strict lifecycle and no lost updates.",
     categories: ["Django & APIs"],
@@ -40,7 +42,6 @@ export const projects: Project[] = [
     year: null,
     status: "Public repository",
     github: "https://github.com/Mohammad78SD/leads",
-    image: "/previews/leads.png", // TODO: replace with a real screenshot
     featured: true,
     problem:
       "An admissions-style CRM has to track every inbound lead through its lifecycle, enforce an SLA on first contact, assign advisors, log outreach attempts and show managers what is overdue. Several people touch the same records at once, so naive code loses updates or lets leads reach invalid states.",
@@ -62,7 +63,8 @@ export const projects: Project[] = [
   },
   {
     slug: "mahsa",
-    title: "mahsa",
+    repo: "mahsa",
+    title: "Mahsa",
     pitch:
       "An HR system for a small company: attendance from RFID readers, lunch reservations, OTP login, push notifications, surveys and reports.",
     categories: ["Django & APIs"],
@@ -72,7 +74,6 @@ export const projects: Project[] = [
     year: null,
     status: "Public repository (built for Metafan, internal use)",
     github: "https://github.com/Mohammad78SD/mahsa",
-    image: "/previews/mahsa.png", // TODO: replace with a real screenshot
     featured: true,
     problem:
       "A small company handled day-to-day HR tasks by hand: attendance, daily lunch orders, notifications, surveys and monthly reports. It needed one internal system with a Persian, right-to-left interface and the Jalali calendar.",
@@ -92,7 +93,8 @@ export const projects: Project[] = [
   },
   {
     slug: "event-photos",
-    title: "event-photos",
+    repo: "event-photos",
+    title: "Event Photos",
     pitch:
       "Event photo sharing: guests scan a QR code and upload from their phones, with moderation and a live projector wall. Built in about 5 days, used live at a real event.",
     categories: ["Django & APIs"],
@@ -102,7 +104,6 @@ export const projects: Project[] = [
     year: "2026",
     status: "Used live at a real event (Sept 2026)",
     github: "https://github.com/Mohammad78SD/event-photos",
-    image: "/previews/event-photos.png", // TODO: replace with a real screenshot
     featured: true,
     problem:
       "At an event, guests take many photos on their phones and the hosts want them all in one shared album, without asking people to install an app or create accounts, and with control over what shows up on screen.",
@@ -124,7 +125,8 @@ export const projects: Project[] = [
   },
   {
     slug: "rahorasm-backend",
-    title: "rahorasm-backend",
+    repo: "rahorasm-backend",
+    title: "RahoRasm",
     pitch:
       "The REST API behind a tour booking platform: tours, hotels and pricing, reservations and OTP-by-SMS login.",
     categories: ["Django & APIs"],
@@ -134,7 +136,6 @@ export const projects: Project[] = [
     year: null,
     status: "Public repository",
     github: "https://github.com/Mohammad78SD/rahorasm-backend",
-    image: "/previews/rahorasm.png", // TODO: replace with a real screenshot
     featured: true,
     note: "Backend only. The frontend is a separate project by another developer (@mahd1ar).",
     problem:
@@ -155,7 +156,8 @@ export const projects: Project[] = [
   },
   {
     slug: "mimify",
-    title: "mimify",
+    repo: "mimify",
+    title: "MiMify",
     pitch:
       "A WordPress plugin that sends WooCommerce order notifications to Telegram through a Cloudflare Worker relay.",
     categories: ["WordPress", "Tools"],
@@ -165,7 +167,6 @@ export const projects: Project[] = [
     year: null,
     status: "Public repository",
     github: "https://github.com/Mohammad78SD/mimify",
-    image: "/previews/mimify-github-card.png", // TODO: replace with a real screenshot
     featured: false,
     problem:
       "Some hosts cannot reach api.telegram.org directly, and putting bot tokens and chat IDs in every client's WordPress site is both awkward and risky.",
@@ -185,7 +186,8 @@ export const projects: Project[] = [
   },
   {
     slug: "lior-toolkit",
-    title: "lior-toolkit",
+    repo: "lior-toolkit",
+    title: "Lior Toolkit",
     pitch:
       "One modular WordPress/WooCommerce plugin for a jewellery store, with one file per feature.",
     categories: ["WordPress"],
@@ -195,7 +197,6 @@ export const projects: Project[] = [
     year: null,
     status: "Public repository",
     github: "https://github.com/Mohammad78SD/lior-toolkit",
-    image: null,
     featured: false,
     problem:
       "A store's custom functionality tends to pile up as one standalone plugin per feature. This toolkit puts all custom functionality for the site in a single plugin instead.",
@@ -213,6 +214,7 @@ export const projects: Project[] = [
   },
   {
     slug: "seataar",
+    repo: null,
     title: "Seataar",
     pitch:
       "A real-time seat reservation and ticketing platform with live seat maps.",
@@ -223,7 +225,6 @@ export const projects: Project[] = [
     year: null,
     status: "Launching soon",
     github: null,
-    image: null,
     featured: false,
     note: "Private for now. No public repository yet.",
     problem:

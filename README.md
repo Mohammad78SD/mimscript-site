@@ -15,7 +15,6 @@ pnpm build      # static site in out/
 
 - `src/data/projects.ts` — all project content. Unknown facts are `null` and render as a dashed "TODO".
 - `src/components/Hero.tsx` + `HeroScene.tsx` — pinned scroll story (GSAP ScrollTrigger drives an R3F scene).
-- `public/previews/` — temporary preview images. TODO: replace with real screenshots.
 - OG image: TODO, add `public/og.png` and reference it in `src/app/layout.tsx`.
 
 ## nginx example

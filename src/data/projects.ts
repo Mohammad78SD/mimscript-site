@@ -126,7 +126,8 @@ export const projects: Project[] = [
       "Media served through nginx with X-Accel-Redirect after Django's visibility check.",
       "Docker Compose deployment, 90 tests and CI.",
     ],
-    result: null,
+    result:
+      "Used live at a private event: guests uploaded photos by QR code and they appeared on the projector wall.",
   },
   {
     slug: "rahorasm-backend",

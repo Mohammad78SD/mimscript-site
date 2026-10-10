@@ -78,7 +78,8 @@ export const projectsFa: Record<string, ProjectFa> = {
       "ارائهٔ مدیا از طریق nginx با X-Accel-Redirect پس از بررسی دسترسی توسط جنگو.",
       "استقرار با Docker Compose، ۹۰ تست و CI.",
     ],
-    result: null,
+    result:
+      "به‌صورت زنده در یک مراسم خصوصی استفاده شد: مهمان‌ها با اسکن QR عکس آپلود کردند و عکس‌ها روی دیوار پروژکتور نمایش داده شدند.",
   },
   "rahorasm-backend": {
     pitch:

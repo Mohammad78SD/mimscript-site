@@ -10,6 +10,8 @@ import type { HeroState } from "./HeroScene";
 import { getDict, isRtl, type Locale } from "@/i18n";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
+// the mobile URL bar showing/hiding must not re-measure and jump the pinned story
+ScrollTrigger.config({ ignoreMobileResize: true });
 
 /** Timeline position (s) where the hub cube covers the whole viewport. */
 const COVER_AT = 2.5;
@@ -58,6 +60,7 @@ export function Hero({ locale }: { locale: Locale }) {
     setWebgl(hasWebGL());
     setReduced(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
     const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") return; // finger scrolling must not wobble the logo
       state.px = (e.clientX / window.innerWidth) * 2 - 1;
       state.py = (e.clientY / window.innerHeight) * 2 - 1;
     };
@@ -87,8 +90,10 @@ export function Hero({ locale }: { locale: Locale }) {
     () => {
       const mm = gsap.matchMedia();
       mm.add(
-        "(min-width: 768px) and (prefers-reduced-motion: no-preference)",
+        "(prefers-reduced-motion: no-preference)",
         () => {
+          // on phones the headline sits right above the logo: clear it sooner
+          const phone = window.matchMedia("(max-width: 767px)").matches;
           const tl = gsap.timeline({
             defaults: { ease: "none" },
             scrollTrigger: {
@@ -108,7 +113,7 @@ export function Hero({ locale }: { locale: Locale }) {
           });
           // 1. headline slides away while the logo breaks apart
           tl.to(state, { explode: 1, duration: 1.5 }, 0)
-            .to(headline.current, { yPercent: -35, opacity: 0, duration: 0.9 }, 0)
+            .to(headline.current, { yPercent: -35, opacity: 0, duration: phone ? 0.45 : 0.9 }, 0)
             .to(hint.current, { opacity: 0, duration: 0.3 }, 0)
             // 2. the network stays on paper; the camera dives into the blue hub cube,
             //    which turns ink and fills the screen at COVER_AT
@@ -118,7 +123,7 @@ export function Hero({ locale }: { locale: Locale }) {
             .to(canvasWrap.current, { opacity: 0, duration: 0.1 }, COVER_AT + 0.02)
             .to(grid.current, { opacity: 0, duration: 0.1 }, COVER_AT + 0.02)
             // trailing pad: the screen is already plain ink before the Work section
-            // (which overlaps the stage by 55vh) starts to slide up over it
+            // (which overlaps the stage by 55svh) starts to slide up over it
             .to({}, { duration: 1.5 }, COVER_AT + 0.12);
         },
       );
@@ -133,9 +138,9 @@ export function Hero({ locale }: { locale: Locale }) {
     <div
       ref={wrapper}
       data-theme="light"
-      className="relative bg-paper md:motion-safe:h-[280vh]"
+      className="relative bg-paper motion-safe:h-[280svh]"
     >
-      <div className="relative h-svh min-h-[560px] overflow-hidden md:motion-safe:sticky md:motion-safe:top-0 md:motion-safe:h-screen">
+      <div className="relative h-svh min-h-[560px] overflow-hidden motion-safe:sticky motion-safe:top-0">
         {/* plain ink layer, switched on once the hub fills the screen, behind the 3D scene */}
         <div
           ref={overlay}

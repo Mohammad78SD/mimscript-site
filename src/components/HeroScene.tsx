@@ -34,6 +34,7 @@ const LAYERS = [
   { count: 8, x: 2.5 },
   { count: 16, x: 5.0 },
 ];
+const NET_HALF_H = 3.0; // half width of the vertical (portrait) network
 const NET_HALF_W = 5.6; // used to fit the network into narrow viewports
 const HUB_FILL = 0.6; // end distance as a fraction of the exact "face fills the screen" distance
 const NODE_SIZE = 0.27;
@@ -294,6 +295,8 @@ function Scene({
     const viewH = 2 * CAM_Z * Math.tan((FOV * Math.PI) / 360);
     const viewW = viewH * aspect;
     const wide = aspect > 1.1;
+    // portrait: lay the network out vertically (publishers top -> hub -> subscribers bottom)
+    const portrait = aspect < 0.9;
 
     // everything but the hub shrinks away during the dive so nothing clips the camera
     const dissolve = 1 - smooth(clamp01((V - 0.3) / 0.5));
@@ -303,10 +306,12 @@ function Scene({
       const e = easeInOut(clamp01((E - d.delay[i]) / 0.6));
       const arcK = Math.sin(Math.PI * e);
       const bob = isNode && e > 0.99 ? Math.sin(t * 0.6 + i) * 0.05 : 0;
-      const x = d.home[i * 3] + (d.target[i * 3] - d.home[i * 3]) * (isNode ? e : 0) + d.arc[i * 3] * arcK;
+      const tgX = portrait ? d.target[i * 3 + 1] : d.target[i * 3];
+      const tgY = portrait ? -d.target[i * 3] : d.target[i * 3 + 1];
+      const x = d.home[i * 3] + (tgX - d.home[i * 3]) * (isNode ? e : 0) + d.arc[i * 3] * arcK;
       const y =
         d.home[i * 3 + 1] +
-        (d.target[i * 3 + 1] - d.home[i * 3 + 1]) * (isNode ? e : 0) +
+        (tgY - d.home[i * 3 + 1]) * (isNode ? e : 0) +
         d.arc[i * 3 + 1] * arcK * (isNode ? 1 : 0) +
         bob;
       const z = isNode
@@ -322,9 +327,10 @@ function Scene({
       if (isNode) {
         const hubBoost = i === d.hubCell ? 1.9 : 1; // the blue cube reads at rest
         const u0 = d.s * GAP * hubBoost;
-        sx = u0 + (d.nodeScale[i] - u0) * e;
+        const ns = d.nodeScale[i] * (portrait && i !== d.hubCell ? 1.15 : 1);
+        sx = u0 + (ns - u0) * e;
         const z0 = d.s * SLAB * hubBoost * (hubBoost > 1 ? 1.3 : 1);
-        sz = z0 + (d.nodeScale[i] - z0) * e;
+        sz = z0 + (ns - z0) * e;
         if (i !== d.hubCell) {
           sx *= dissolve;
           sz *= dissolve;
@@ -423,7 +429,9 @@ function Scene({
       const k0 = wide ? Math.min(1, (viewW * 0.34) / logoW, (viewH * 0.74) / LOGO_H) : Math.min(1, (viewW * 0.7) / logoW, 0.9);
       const logoX = wide ? viewW * 0.3 * (mirror ? -1 : 1) : 0; // RTL: logo on the left
       const logoY = wide ? 0 : -viewH * 0.2;
-      const netK = Math.min(1, (viewW * 0.92) / (NET_HALF_W * 2));
+      const netK = portrait
+        ? Math.min(1, (viewH * 0.8) / (NET_HALF_W * 2), (viewW * 0.92) / (NET_HALF_H * 2))
+        : Math.min(1, (viewW * 0.92) / (NET_HALF_W * 2));
       outer.current.position.x = logoX * (1 - ee);
       outer.current.position.y = logoY * (1 - ee);
       outer.current.scale.setScalar(k0 + (netK - k0) * ee);
@@ -544,7 +552,7 @@ export default function HeroCanvas({
   return (
     <Canvas
       frameloop={frameloop}
-      dpr={[1, 2]}
+      dpr={[1, window.innerWidth < 768 ? 1.5 : 2]}
       camera={{ position: [0, 0, CAM_Z], fov: FOV }}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       aria-hidden="true"

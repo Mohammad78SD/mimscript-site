@@ -56,7 +56,7 @@ export function Work({ locale }: { locale: Locale }) {
     <section
       id="work"
       data-theme="dark"
-      className="relative z-10 bg-ink px-4 pb-24 pt-24 text-paper sm:px-8 md:motion-safe:-mt-[55vh] md:motion-safe:pt-16"
+      className="relative z-10 bg-ink px-4 pb-24 pt-24 text-paper sm:px-8 motion-safe:-mt-[55svh] motion-safe:pt-16"
     >
       <div className="mx-auto max-w-[1600px]">
         <div className="mb-14 text-blue-light">

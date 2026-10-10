@@ -1,0 +1,11 @@
+// Cloudflare Workers static assets: serves the `next build` export in ./out.
+// (Cloudflare Pages ignores this file and uses its own build settings.)
+{
+  "name": "mimscript",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./out",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash"
+  }
+}

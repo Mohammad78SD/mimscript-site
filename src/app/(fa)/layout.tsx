@@ -15,7 +15,11 @@ export const metadata: Metadata = {
     type: "website",
     locale: fa.meta.ogLocale,
     alternateLocale: "en_US",
+    images: [
+      { url: "/og.png", width: 1200, height: 630, alt: "Mohammad Sabet Daryani, Software Engineer · Python / Django" },
+    ],
   },
+  twitter: { card: "summary_large_image", images: ["/og.png"] },
   icons: { icon: "/mim.svg" },
 };
 

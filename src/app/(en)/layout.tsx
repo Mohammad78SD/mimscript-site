@@ -15,8 +15,11 @@ export const metadata: Metadata = {
     type: "website",
     locale: en.meta.ogLocale,
     alternateLocale: "fa_IR",
-    // TODO: add a real OG image (1200x630) at public/og.png and reference it here.
+    images: [
+      { url: "/og.png", width: 1200, height: 630, alt: "Mohammad Sabet Daryani, Software Engineer · Python / Django" },
+    ],
   },
+  twitter: { card: "summary_large_image", images: ["/og.png"] },
   icons: { icon: "/mim.svg" },
 };
 

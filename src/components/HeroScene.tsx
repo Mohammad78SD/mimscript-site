@@ -426,9 +426,14 @@ function Scene({
     const ee = smooth(clamp01(E * 1.4));
     if (outer.current) {
       const logoW = LOGO_H * LOGO_ASPECT;
-      const k0 = wide ? Math.min(1, (viewW * 0.34) / logoW, (viewH * 0.74) / LOGO_H) : Math.min(1, (viewW * 0.7) / logoW, 0.9);
+      // narrow screens: same size/spot as the SVG placeholder in Hero.tsx (h-[30vh], mt-64 =
+      // centre 128px below the middle), so the swap from SVG to 3D doesn't jump
+      const pxToWorld = viewH / size.height;
+      const k0 = wide
+        ? Math.min(1, (viewW * 0.34) / logoW, (viewH * 0.74) / LOGO_H)
+        : (window.innerHeight * 0.3 * pxToWorld) / LOGO_H;
       const logoX = wide ? viewW * 0.3 * (mirror ? -1 : 1) : 0; // RTL: logo on the left
-      const logoY = wide ? 0 : -viewH * 0.2;
+      const logoY = wide ? 0 : -128 * pxToWorld;
       const netK = portrait
         ? Math.min(1, (viewH * 0.8) / (NET_HALF_W * 2), (viewW * 0.92) / (NET_HALF_H * 2))
         : Math.min(1, (viewW * 0.92) / (NET_HALF_W * 2));

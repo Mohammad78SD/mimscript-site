@@ -3,6 +3,9 @@
 {
   "name": "mimscript",
   "compatibility_date": "2026-10-01",
+  // only serve on mimscript.com (custom domains), no extra *.workers.dev copy
+  "workers_dev": false,
+  "preview_urls": false,
   "assets": {
     "directory": "./out",
     "not_found_handling": "404-page",

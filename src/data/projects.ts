@@ -256,7 +256,7 @@ export const projects: Project[] = [
       "A Docker dev environment with SMS and mail mocks.",
     ],
     result:
-      "Running in production on the store, where the migration upgraded the live store in place from the two earlier internal versions.",
+      "Running in production on the store. The plugin includes a tested one-time migration for upgrading the live store from its two earlier internal versions.",
   },
   {
     slug: "seataar",

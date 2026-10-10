@@ -62,7 +62,8 @@ export const projects: Project[] = [
       "Derived fields such as is_overdue and seconds_to_deadline are computed, never stored.",
       "Strict boolean filter parsing: an unparsable value returns 400 instead of silently returning every lead.",
     ],
-    result: null,
+    result:
+      "A demo module, not deployed for a client. It was built to show how I structure a backend: explicit state transitions, locking under concurrency, and tests that prove it.",
   },
   {
     slug: "mahsa",
@@ -92,7 +93,8 @@ export const projects: Project[] = [
       "64 tests and a CI workflow.",
       "Reports exported to Excel; an employment letter generated as an image with correct Persian text shaping.",
     ],
-    result: null,
+    result:
+      "Used in-house at Metafan as its internal HR system.",
   },
   {
     slug: "event-photos",
@@ -155,7 +157,8 @@ export const projects: Project[] = [
       "Redis-backed OTP codes.",
       "57 tests and CI.",
     ],
-    result: null,
+    result:
+      "The backend was completed, but the company did not launch the product.",
   },
   {
     slug: "mimify",
@@ -185,7 +188,8 @@ export const projects: Project[] = [
       "CI releases: tagged releases build the ZIP, check version consistency and publish the update.",
       "Persian by default, with English available per site.",
     ],
-    result: null,
+    result:
+      "Running on 2 WooCommerce stores.",
   },
   {
     slug: "lior-toolkit",
@@ -213,7 +217,8 @@ export const projects: Project[] = [
       "One file per feature, no registration boilerplate.",
       "Updates are always a manual click; nothing installs itself.",
     ],
-    result: null,
+    result:
+      "Running in production on lior-jewellery.com, where it holds all of the store's custom functionality in one plugin.",
   },
   {
     slug: "mim-dollar-toolkit",

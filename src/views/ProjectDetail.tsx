@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getProject, localizeProject, nextProject } from "@/data/projects";
 import { ProjectVisual } from "@/components/ProjectVisual";
-import { Todo } from "@/components/Todo";
 import { Contact } from "@/components/Contact";
 import { Arrow } from "@/components/Arrow";
 import { getDict, localePath, num, type Locale } from "@/i18n";
@@ -82,15 +81,12 @@ export function ProjectDetail({ locale, slug }: { locale: Locale; slug: string }
             <Block n={num(locale, "03")} title={t.project.blocks.highlights}>
               <List items={p.highlights} />
             </Block>
-            <Block n={num(locale, "04")} title={t.project.blocks.result}>
-              {p.result ? (
+            {/* no result yet => no block (never a placeholder on the live site) */}
+            {p.result && (
+              <Block n={num(locale, "04")} title={t.project.blocks.result}>
                 <p className="max-w-3xl text-lg leading-relaxed">{p.result}</p>
-              ) : (
-                <p className="text-lg leading-relaxed">
-                  <Todo>{t.project.todoResult}</Todo>
-                </p>
-              )}
-            </Block>
+              </Block>
+            )}
           </div>
         </div>
 

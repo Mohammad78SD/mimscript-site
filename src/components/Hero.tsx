@@ -11,6 +11,9 @@ import { getDict, isRtl, type Locale } from "@/i18n";
 
 gsap.registerPlugin(useGSAP, ScrollTrigger);
 
+/** Timeline position (s) where the hub cube covers the whole viewport. */
+const COVER_AT = 2.5;
+
 const HeroCanvas = dynamic(() => import("./HeroScene"), { ssr: false });
 
 function hasWebGL() {
@@ -23,9 +26,9 @@ function hasWebGL() {
 }
 
 /**
- * Pinned scroll story. The wrapper is 250vh tall on desktop; the stage inside
+ * Pinned scroll story. The wrapper is 280vh tall on desktop; the stage inside
  * is `sticky h-screen`. A ScrollTrigger-scrubbed GSAP timeline writes into the
- * shared `state` object (explode / tint / zoom) that the R3F scene reads each
+ * shared `state` object (explode / dive) that the R3F scene reads each
  * frame, and animates the DOM layers (headline, dark overlay, canvas).
  */
 export function Hero({ locale }: { locale: Locale }) {
@@ -40,7 +43,7 @@ export function Hero({ locale }: { locale: Locale }) {
   const [state] = useState<HeroState>(() => ({
     explode: 0,
     tint: 0,
-    zoom: 0,
+    dive: 0,
     px: 0,
     py: 0,
   }));
@@ -96,9 +99,10 @@ export function Hero({ locale }: { locale: Locale }) {
               invalidateOnRefresh: true,
               onUpdate: (self) => {
                 // lets the fixed header know which colour is under it
+                // dark once the (ink-coloured) hub fills nearly the whole screen
                 if (wrapper.current)
                   wrapper.current.dataset.theme =
-                    self.progress > 0.58 ? "dark" : "light";
+                    self.progress * tl.duration() >= COVER_AT - 0.12 ? "dark" : "light";
               },
             },
           });
@@ -106,26 +110,16 @@ export function Hero({ locale }: { locale: Locale }) {
           tl.to(state, { explode: 1, duration: 1.5 }, 0)
             .to(headline.current, { yPercent: -35, opacity: 0, duration: 0.9 }, 0)
             .to(hint.current, { opacity: 0, duration: 0.3 }, 0)
-            // 2. paper stays until the network is formed (explode ends at 1.6), then an
-            //    ink circle wipes out of the hub in ~15% of the scroll: no blended grey frame
-            .fromTo(
-              overlay.current,
-              { clipPath: "circle(0% at 50% 50%)" },
-              { clipPath: "circle(150% at 50% 50%)", duration: 0.5, ease: "power2.in" },
-              1.6,
-            )
-            .to(state, { tint: 1, duration: 0.45 }, 1.7)
-            .to(
-              grid.current ? Array.from(grid.current.children) : [],
-              { borderColor: "rgba(255,255,255,0.14)", duration: 0.4 },
-              1.85,
-            )
-            // 3. camera pushes into the network, the screen ends up ink
-            .to(state, { zoom: 1, duration: 0.7, ease: "power1.in" }, 1.8)
-            .to(canvasWrap.current, { opacity: 0, duration: 0.3 }, 2.1)
-            .to(grid.current, { opacity: 0, duration: 0.3 }, 2.1)
-            // trailing pad: the Work section slides up over the (already ink) stage here
-            .to({}, { duration: 0.7 }, 2.5);
+            // 2. the network stays on paper; the camera dives into the blue hub cube,
+            //    which turns ink and fills the screen at COVER_AT
+            .to(state, { dive: 1, duration: COVER_AT - 1.6, ease: "power1.in" }, 1.6)
+            // 3. hub covers everything: swap in the plain ink layer, then drop the canvas
+            .fromTo(overlay.current, { opacity: 0 }, { opacity: 1, duration: 0.02 }, COVER_AT)
+            .to(canvasWrap.current, { opacity: 0, duration: 0.1 }, COVER_AT + 0.02)
+            .to(grid.current, { opacity: 0, duration: 0.1 }, COVER_AT + 0.02)
+            // trailing pad: the screen is already plain ink before the Work section
+            // (which overlaps the stage by 55vh) starts to slide up over it
+            .to({}, { duration: 1.5 }, COVER_AT + 0.12);
         },
       );
       return () => mm.revert();
@@ -139,13 +133,13 @@ export function Hero({ locale }: { locale: Locale }) {
     <div
       ref={wrapper}
       data-theme="light"
-      className="relative bg-paper md:motion-safe:h-[250vh]"
+      className="relative bg-paper md:motion-safe:h-[280vh]"
     >
       <div className="relative h-svh min-h-[560px] overflow-hidden md:motion-safe:sticky md:motion-safe:top-0 md:motion-safe:h-screen">
-        {/* dark layer that fades in behind the 3D scene */}
+        {/* plain ink layer, switched on once the hub fills the screen, behind the 3D scene */}
         <div
           ref={overlay}
-          className="absolute inset-0 bg-ink [clip-path:circle(0%_at_50%_50%)]"
+          className="absolute inset-0 bg-ink opacity-0"
           aria-hidden="true"
         />
 

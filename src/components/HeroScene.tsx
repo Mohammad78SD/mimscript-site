@@ -12,8 +12,8 @@ import { mulberry32, rasterizeMim } from "@/lib/voxels";
 /** Mutable animation state, written by GSAP (scroll) and read every frame. */
 export type HeroState = {
   explode: number; // 0 = intact logo, 1 = structured network
-  tint: number; // 0 = dark cubes (light bg), 1 = lighter blue-grey cubes (ink bg)
-  zoom: number; // camera push-in 0..1
+  tint: number; // 0 = dark cubes (light bg), 1 = lighter blue-grey cubes (ink bg); unused by the dive
+  dive: number; // camera flies into the blue hub cube 0..1 (1 = hub fills the screen, ink)
   px: number; // pointer -1..1
   py: number;
 };
@@ -35,6 +35,7 @@ const LAYERS = [
   { count: 16, x: 5.0 },
 ];
 const NET_HALF_W = 5.6; // used to fit the network into narrow viewports
+const HUB_FILL = 0.6; // end distance as a fraction of the exact "face fills the screen" distance
 const NODE_SIZE = 0.27;
 const HUB_SIZE = 0.5;
 const PACKETS = 40;
@@ -247,6 +248,7 @@ function Scene({
   const inner = useRef<THREE.Group>(null);
   const cubes = useRef<THREE.InstancedMesh>(null);
   const hub = useRef<THREE.Mesh>(null);
+  const hubMat = useRef<THREE.MeshStandardMaterial>(null);
   const pk = useRef<THREE.InstancedMesh>(null);
   const lines = useRef<THREE.LineSegments>(null);
   const shadow = useRef<THREE.Mesh>(null);
@@ -260,6 +262,10 @@ function Scene({
       cur: new Float32Array(d.n * 3),
       lineColA: new THREE.Color("#1F3A93"),
       lineColB: new THREE.Color("#7C9BFF"),
+      hubBlue: new THREE.Color("#1F3A93"),
+      hubInk: new THREE.Color("#0E1220"),
+      hubW: new THREE.Vector3(),
+      hubS: new THREE.Vector3(),
       lastTint: -1,
       rotY: 0,
       rotX: 0,
@@ -279,7 +285,7 @@ function Scene({
   useFrame(({ clock, camera }, delta) => {
     const t = animated ? clock.elapsedTime : 0;
     const E = state.explode;
-    const Z = state.zoom;
+    const V = state.dive;
     const { o, c, cur } = tmp;
     const cube = cubes.current;
     if (!cube) return;
@@ -289,8 +295,8 @@ function Scene({
     const viewW = viewH * aspect;
     const wide = aspect > 1.1;
 
-    // everything shrinks away during the final push-in so nothing clips the camera
-    const dissolve = 1 - smooth(clamp01((Z - 0.55) / 0.4));
+    // everything but the hub shrinks away during the dive so nothing clips the camera
+    const dissolve = 1 - smooth(clamp01((V - 0.3) / 0.5));
 
     for (let i = 0; i < d.n; i++) {
       const isNode = d.nodeScale[i] > 0;
@@ -319,8 +325,10 @@ function Scene({
         sx = u0 + (d.nodeScale[i] - u0) * e;
         const z0 = d.s * SLAB * hubBoost * (hubBoost > 1 ? 1.3 : 1);
         sz = z0 + (d.nodeScale[i] - z0) * e;
-        sx *= dissolve;
-        sz *= dissolve;
+        if (i !== d.hubCell) {
+          sx *= dissolve;
+          sz *= dissolve;
+        }
       } else {
         // everything that is not a node shrinks away (staggered left -> right)
         const shrink = 1 - easeIn(clamp01((E - d.delay[i] * 0.8) / 0.5));
@@ -332,7 +340,8 @@ function Scene({
         const hm = hub.current;
         if (hm) {
           hm.position.set(x, y, z);
-          hm.rotation.set(0, d.spin[i] * e, 0);
+          // squares up to the camera during the dive so its face covers the screen edge to edge
+          hm.rotation.set(0, d.spin[i] * e * (1 - smooth(clamp01(V / 0.6))), 0);
           hm.scale.set(sx, sx, sz);
         }
         o.scale.setScalar(0);
@@ -435,8 +444,36 @@ function Scene({
       (shadow.current.material as THREE.MeshBasicMaterial).opacity = clamp01(1 - E * 3);
     }
 
-    // camera push-in (only at the very end, after the network has settled)
-    camera.position.z = CAM_Z - Z * Z * 8.5;
+    // hub turns from brand blue into the ink of the next section
+    const hk = smooth(clamp01(V));
+    const hm = hubMat.current;
+    if (hm) {
+      hm.color.lerpColors(tmp.hubBlue, tmp.hubInk, hk);
+      hm.emissive.lerpColors(tmp.hubBlue, tmp.hubInk, hk);
+      hm.emissiveIntensity = 1.1 * (1 - hk);
+      hm.roughness = 0.4 + 0.6 * hk; // no specular glints on the final flat face
+    }
+
+    // camera dive: fly into the hub, centred on it, stopping just in front of its
+    // front face at the distance where that face covers the whole viewport
+    if (hub.current && V > 0) {
+      const { hubW, hubS } = tmp;
+      hub.current.updateWorldMatrix(true, false);
+      hub.current.getWorldPosition(hubW);
+      hub.current.getWorldScale(hubS);
+      const faceZ = hubW.z + hubS.z / 2;
+      const dEnd =
+        (hubS.x / (2 * Math.tan((FOV * Math.PI) / 360) * Math.max(1, aspect))) * HUB_FILL;
+      const d0 = CAM_Z - faceZ;
+      // exponential approach: constant apparent zoom rate instead of a late hyperbolic jump
+      camera.position.set(hubW.x * V, hubW.y * V, faceZ + d0 * Math.pow(dEnd / d0, V));
+    } else {
+      camera.position.set(0, 0, CAM_Z);
+    }
+    if (camera.near !== 0.02) {
+      camera.near = 0.02;
+      camera.updateProjectionMatrix();
+    }
   });
 
   const half = LOGO_H / 2;
@@ -468,6 +505,7 @@ function Scene({
           <mesh ref={hub} frustumCulled={false}>
             <boxGeometry args={[1, 1, 1]} />
             <meshStandardMaterial
+              ref={hubMat}
               color="#1F3A93"
               emissive="#1F3A93"
               emissiveIntensity={1.1}

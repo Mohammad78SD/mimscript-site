@@ -648,6 +648,109 @@ function SeataarArt() {
   );
 }
 
+/* ---------- mim-dollar-toolkit: pricing flow + pre-invoice statuses ---------- */
+
+function DollarToolkitArt() {
+  const steps = [
+    { t: "median", s: "5% outlier drop" },
+    { t: "guard", s: "hold big jumps" },
+    { t: "x USD", s: "markup + round" },
+    { t: "Toman", s: "WC price fields" },
+  ];
+  return (
+    <g>
+      <text x="24" y="40" fontSize="11" fill={MUTED} style={{ fontFamily: MONO, letterSpacing: "0.08em" }}>
+        USD PRICING
+      </text>
+      <g transform="translate(24 52)">
+        <rect width="124" height="64" rx="8" fill={CARD} stroke={LINE} />
+        <text x="12" y="22" fontSize="10.5" fill={PAPER} style={{ fontFamily: MONO }}>
+          USDT rate
+        </text>
+        <text x="12" y="40" fontSize="9" fill={MUTED} style={{ fontFamily: MONO }}>
+          Bitpin
+        </text>
+        <text x="12" y="53" fontSize="9" fill={MUTED} style={{ fontFamily: MONO }}>
+          Nobitex · Wallex
+        </text>
+      </g>
+      {steps.map((st, i) => {
+        const x = 168 + i * 116;
+        return (
+          <g key={st.t}>
+            <Arrow x1={x - 16} y1={84} x2={x - 2} y2={84} />
+            <g transform={`translate(${x} 56)`}>
+              <rect width="100" height="56" rx="8" fill={i === 3 ? B : CARD} stroke={i === 3 ? BL : LINE} />
+              <text x="10" y="24" fontSize="12" fill={PAPER} style={{ fontFamily: MONO }}>
+                {st.t}
+              </text>
+              <text x="10" y="42" fontSize="8.5" fill={MUTED} style={{ fontFamily: MONO }}>
+                {st.s}
+              </text>
+            </g>
+          </g>
+        );
+      })}
+
+      <text x="24" y="170" fontSize="11" fill={MUTED} style={{ fontFamily: MONO, letterSpacing: "0.08em" }}>
+        PRE-INVOICE ORDER STATUS
+      </text>
+      <g transform="translate(24 188)">
+        <rect width="104" height="40" rx="8" fill={CARD} stroke={LINE} />
+        <text x="52" y="25" fontSize="11" textAnchor="middle" fill={PAPER} style={{ fontFamily: MONO }}>
+          pending
+        </text>
+      </g>
+      <Arrow x1={132} y1={208} x2={162} y2={208} />
+      <g transform="translate(166 188)">
+        <rect width="150" height="40" rx="8" fill={B} stroke={BL} />
+        <text x="75" y="25" fontSize="11" textAnchor="middle" fill={PAPER} style={{ fontFamily: MONO }}>
+          mdt-preinvoice
+        </text>
+      </g>
+      <Arrow x1={320} y1={200} x2={366} y2={184} />
+      <Arrow x1={320} y1={216} x2={366} y2={236} />
+      <g transform="translate(370 166)">
+        <rect width="120" height="36" rx="8" fill={CARD} stroke={LINE} />
+        <text x="60" y="23" fontSize="11" textAnchor="middle" fill={PAPER} style={{ fontFamily: MONO }}>
+          processing
+        </text>
+      </g>
+      <g transform="translate(370 218)">
+        <rect width="246" height="36" rx="8" fill="none" stroke={LINE} strokeDasharray="5 5" />
+        <text x="12" y="23" fontSize="10.5" fill={PAPER} style={{ fontFamily: MONO }}>
+          cancelled after N days
+        </text>
+      </g>
+      <text x="500" y="189" fontSize="9.5" fill={MUTED} style={{ fontFamily: MONO }}>
+        mark paid
+      </text>
+      <text x="24" y="256" fontSize="9.5" fill={MUTED} style={{ fontFamily: MONO }}>
+        stock reserved; restored on auto-cancel
+      </text>
+
+      <g transform="translate(24 280)">
+        <rect width="592" height="50" rx="8" fill={CARD} stroke={LINE} />
+        <text x="16" y="21" fontSize="10.5" fill={PAPER} style={{ fontFamily: MONO }}>
+          POST /mdt/v1/otp/request
+        </text>
+        <text x="16" y="38" fontSize="10.5" fill={PAPER} style={{ fontFamily: MONO }}>
+          POST /mdt/v1/otp/verify
+        </text>
+        <text x="576" y="30" fontSize="9.5" textAnchor="end" fill={MUTED} style={{ fontFamily: MONO }}>
+          single use · 5 attempts
+        </text>
+      </g>
+      <Chip x={24} y={352} w={110}>
+        159 tests
+      </Chip>
+      <Chip x={146} y={352} w={190}>
+        CI: PHP 7.4 / 8.1 / 8.3
+      </Chip>
+    </g>
+  );
+}
+
 const visuals: Record<string, () => ReactNode> = {
   leads: LeadsArt,
   mahsa: MahsaArt,
@@ -655,5 +758,6 @@ const visuals: Record<string, () => ReactNode> = {
   "rahorasm-backend": RahoRasmArt,
   mimify: MimifyArt,
   "lior-toolkit": LiorArt,
+  "mim-dollar-toolkit": DollarToolkitArt,
   seataar: SeataarArt,
 };

@@ -6,6 +6,7 @@ const links = [
   { label: "Email", text: "mohammadsd2000@gmail.com", href: "mailto:mohammadsd2000@gmail.com" },
   { label: "LinkedIn", text: "linkedin.com/in/mohammadsd", href: "https://www.linkedin.com/in/mohammadsd/" },
   { label: "GitHub", text: "github.com/Mohammad78SD", href: "https://github.com/Mohammad78SD" },
+  { label: "CV", text: "mimscript.com/cv.pdf", href: "/cv.pdf" },
 ];
 
 export function Contact({ locale }: { locale: Locale }) {
@@ -34,12 +35,12 @@ export function Contact({ locale }: { locale: Locale }) {
             <li key={l.label} className="border-b border-paper/[.14]">
               <a
                 href={l.href}
-                {...(l.href.startsWith("http")
+                {...(l.href.startsWith("http") || l.href.endsWith(".pdf")
                   ? { target: "_blank", rel: "noopener noreferrer" }
                   : {})}
                 className="group flex flex-col gap-1 py-5 sm:flex-row sm:items-baseline sm:justify-between"
               >
-                <span className="label text-paper/60">{l.label === "Email" ? t.email : l.label}</span>
+                <span className="label text-paper/60">{l.label === "Email" ? t.email : l.label === "CV" ? t.cv : l.label}</span>
                 <span dir="ltr" className="break-all text-xl font-semibold tracking-tight transition-colors group-hover:text-blue-light sm:text-3xl">
                   {l.text} <Arrow>↗</Arrow>
                 </span>

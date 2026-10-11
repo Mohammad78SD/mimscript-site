@@ -104,6 +104,7 @@ export const fa: Dict = {
     label: "تماس",
     heading: { lines: ["بیایید با هم", "چیزی بسازیم"], after: "." },
     email: "ایمیل",
+    cv: "رزومه (انگلیسی)",
     footerLeft: "© ۲۰۲۶ محمد ثابت دریانی · میم‌اسکریپت",
     footerRight: "مهندس نرم‌افزار",
   },

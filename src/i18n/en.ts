@@ -102,6 +102,7 @@ export const en = {
     label: "Contact",
     heading: { lines: ["Let's build", "something"], after: "." },
     email: "Email",
+    cv: "CV",
     footerLeft: "© 2026 Mohammad Sabet Daryani · MiM Script",
     footerRight: "Software engineer",
   },

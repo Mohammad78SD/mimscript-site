@@ -3,9 +3,15 @@
 {
   "name": "mimscript",
   "compatibility_date": "2026-10-01",
-  // only serve on mimscript.com (custom domains), no extra *.workers.dev copy
+  // only serve on the custom domains below, no extra *.workers.dev copy
   "workers_dev": false,
   "preview_urls": false,
+  // both listed so a deploy never detaches either one;
+  // keep mimscript.com until the new business site replaces it
+  "routes": [
+    { "pattern": "cv.mimscript.com", "custom_domain": true },
+    { "pattern": "mimscript.com", "custom_domain": true }
+  ],
   // small Worker in front of the assets: Iran / Persian-browser redirect on "/" only
   "main": "./worker.js",
   "assets": {

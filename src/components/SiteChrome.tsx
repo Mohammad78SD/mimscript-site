@@ -2,6 +2,7 @@ import { Header } from "@/components/Header";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { Loader } from "@/components/Loader";
 import { getDict, type Locale } from "@/i18n";
+import { projects } from "@/data/projects";
 
 /** Everything inside <body>; shared by the English and Persian root layouts. */
 export function SiteChrome({ locale, children }: { locale: Locale; children: React.ReactNode }) {
@@ -16,7 +17,10 @@ export function SiteChrome({ locale, children }: { locale: Locale; children: Rea
       </a>
       <Loader />
       <SmoothScroll />
-      <Header locale={locale} />
+      <Header
+        locale={locale}
+        faOnlyPaths={projects.filter((p) => p.iranOnly).map((p) => `/projects/${p.slug}`)}
+      />
       <main id="main">{children}</main>
     </>
   );

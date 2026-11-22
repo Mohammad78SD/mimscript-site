@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import { categories, projects, localizeProject } from "@/data/projects";
+import { categories, projectsFor, localizeProject } from "@/data/projects";
 import { getDict, localePath, pad2, type Locale } from "@/i18n";
 import { ProjectVisual } from "./ProjectVisual";
 
@@ -11,7 +11,8 @@ export function ProjectsExplorer({ locale }: { locale: Locale }) {
   const t = getDict(locale);
   const [filter, setFilter] = useState<(typeof categories)[number]>("All");
   const reduce = useReducedMotion();
-  const shown = projects.filter(
+  const visible = projectsFor(locale);
+  const shown = visible.filter(
     (p) => filter === "All" || p.categories.includes(filter),
   );
 
@@ -56,7 +57,7 @@ export function ProjectsExplorer({ locale }: { locale: Locale }) {
                 <div className="mt-5 flex items-baseline justify-between gap-4">
                   <h2 className="display text-3xl sm:text-4xl">{p.title}</h2>
                   <span className="label text-ink/50 transition-colors group-hover:text-blue">
-                    {pad2(locale, projects.indexOf(src) + 1)}/
+                    {pad2(locale, visible.indexOf(src) + 1)}/
                   </span>
                 </div>
                 <p className="mt-2 max-w-md text-sm leading-relaxed text-ink/75">

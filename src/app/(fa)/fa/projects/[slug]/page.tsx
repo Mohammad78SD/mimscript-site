@@ -19,7 +19,7 @@ export async function generateMetadata({
   return {
     title: p.title,
     description: p.pitch,
-    alternates: alternatesFor("fa", `/projects/${slug}`),
+    alternates: alternatesFor("fa", `/projects/${slug}`, src.iranOnly),
   };
 }
 

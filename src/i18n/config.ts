@@ -1,6 +1,9 @@
 export type Locale = "en" | "fa";
 export const locales: Locale[] = ["en", "fa"];
-export const SITE = "https://mimscript.com";
+/** This site (CV / portfolio for employers). */
+export const SITE = "https://cv.mimscript.com";
+/** Client-facing business site. */
+export const BUSINESS_SITE = "https://mimscript.com";
 
 export const isRtl = (l: Locale) => l === "fa";
 

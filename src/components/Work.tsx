@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { featuredProjects, localizeProject } from "@/data/projects";
+import { featuredFor, localizeProject } from "@/data/projects";
 import { ProjectVisual } from "./ProjectVisual";
 import { SectionLabel } from "./SectionLabel";
 import { Arrow } from "./Arrow";
@@ -10,7 +10,7 @@ import { getDict, localePath, pad2, type Locale } from "@/i18n";
 
 export function Work({ locale }: { locale: Locale }) {
   const t = getDict(locale);
-  const items = featuredProjects.map((p) => localizeProject(p, locale));
+  const items = featuredFor(locale).map((p) => localizeProject(p, locale));
 
   // Single source of truth: `active`. The preview visual, the caption, the counter and
   // the highlighted row are all derived from it in the same render, so they cannot disagree.

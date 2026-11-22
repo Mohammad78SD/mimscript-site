@@ -81,7 +81,7 @@ export const en = {
     label: "Client websites",
     heading: "Websites I build and maintain.",
     intro:
-      "WordPress and WooCommerce sites, built from scratch and maintained for clients in Austria, Canada and Iran.",
+      "WordPress and WooCommerce sites, built from scratch and maintained for clients in Austria and Canada.",
     aria: (name: string, host: string) => `${name} (opens ${host} in a new tab)`,
     alt: (name: string) => `Screenshot of ${name} website`,
   },
@@ -100,9 +100,10 @@ export const en = {
   },
   contact: {
     label: "Contact",
-    heading: { lines: ["Let's build", "something"], after: "." },
+    heading: { lines: ["Let's work", "together"], after: "." },
     email: "Email",
     cv: "CV",
+    business: "Freelance services",
     footerLeft: "© 2026 Mohammad Sabet Daryani · MiM Script",
     footerRight: "Software engineer",
   },

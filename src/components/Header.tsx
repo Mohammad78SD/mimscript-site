@@ -19,7 +19,7 @@ const PROBE_Y = 30;
  * Where sections overlap (Work slides over the pinned hero) the later one in the
  * DOM wins, as it is painted on top.
  */
-export function Header({ locale }: { locale: Locale }) {
+export function Header({ locale, faOnlyPaths }: { locale: Locale; faOnlyPaths: string[] }) {
   const t = getDict(locale);
   const pathname = usePathname();
   const [theme, setTheme] = useState<Theme>("light");
@@ -120,7 +120,7 @@ export function Header({ locale }: { locale: Locale }) {
             dir="ltr"
             className="label flex items-center gap-1.5 !font-medium"
           >
-            <LangLink target="en" current={locale} href={localePath("en", base)} />
+            <LangLink target="en" current={locale} href={localePath("en", faOnlyPaths.includes(base) ? "/projects" : base)} />
             <li aria-hidden="true" className="opacity-40">
               ·
             </li>
@@ -149,6 +149,10 @@ function LangLink({
         hrefLang={target}
         lang={target}
         aria-current={on ? "true" : undefined}
+        // remembered by worker.js so the Iran redirect never overrides a manual choice
+        onClick={() => {
+          document.cookie = `lang=${target}; path=/; max-age=31536000; samesite=lax`;
+        }}
         className={`!font-mono uppercase ${
           on ? "border-b border-current pb-0.5 font-bold" : "opacity-55 hover:opacity-100"
         }`}

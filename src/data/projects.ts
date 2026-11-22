@@ -23,6 +23,8 @@ export type Project = {
   status: string;
   github: string | null;
   featured: boolean;
+  /** Work done for an Iranian client/market: shown only on the Persian site. */
+  iranOnly?: boolean;
   note?: string;
   problem: string;
   built: string[];
@@ -67,6 +69,7 @@ export const projects: Project[] = [
   },
   {
     slug: "mahsa",
+    iranOnly: true,
     repo: "mahsa",
     title: "Mahsa",
     pitch:
@@ -131,6 +134,7 @@ export const projects: Project[] = [
   },
   {
     slug: "rahorasm-backend",
+    iranOnly: true,
     repo: "rahorasm-backend",
     title: "RahoRasm",
     pitch:
@@ -223,6 +227,7 @@ export const projects: Project[] = [
   },
   {
     slug: "mim-dollar-toolkit",
+    iranOnly: true,
     repo: "mim-dollar-toolkit",
     title: "MiM Dollar Toolkit",
     pitch:
@@ -298,15 +303,23 @@ export const categories: ("All" | Category)[] = [
   "Tools",
 ];
 
-export const featuredProjects = projects.filter((p) => p.featured);
+/** Projects visible in a locale: English hides Iran-only work, Persian shows everything. */
+export function projectsFor(locale: Locale): Project[] {
+  return locale === "fa" ? projects : projects.filter((p) => !p.iranOnly);
+}
+
+export function featuredFor(locale: Locale): Project[] {
+  return projectsFor(locale).filter((p) => p.featured);
+}
 
 export function getProject(slug: string) {
   return projects.find((p) => p.slug === slug);
 }
 
-export function nextProject(slug: string) {
-  const i = projects.findIndex((p) => p.slug === slug);
-  return projects[(i + 1) % projects.length];
+export function nextProject(slug: string, locale: Locale) {
+  const list = projectsFor(locale);
+  const i = list.findIndex((p) => p.slug === slug);
+  return list[(i + 1) % list.length];
 }
 
 /** Project with its text fields replaced by the Persian version when locale is "fa". */

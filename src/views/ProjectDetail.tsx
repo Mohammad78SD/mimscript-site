@@ -11,7 +11,7 @@ export function ProjectDetail({ locale, slug }: { locale: Locale; slug: string }
   const src = getProject(slug);
   if (!src) notFound();
   const p = localizeProject(src, locale);
-  const next = localizeProject(nextProject(slug), locale);
+  const next = localizeProject(nextProject(slug, locale), locale);
 
   const meta: [string, React.ReactNode][] = [
     [t.project.meta.role, p.role],

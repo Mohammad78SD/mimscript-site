@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
-import { getProject, localizeProject, projects } from "@/data/projects";
+import { getProject, localizeProject, projectsFor } from "@/data/projects";
 import { ProjectDetail } from "@/views/ProjectDetail";
 import { alternatesFor } from "@/i18n/seo";
 
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return projects.map((p) => ({ slug: p.slug }));
+  return projectsFor("en").map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({

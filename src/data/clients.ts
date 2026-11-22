@@ -14,6 +14,8 @@ export type ClientSite = {
   image: string | null;
   /** Optional internal link to a related project page */
   related?: { href: string; label: string };
+  /** Iranian client: shown only on the Persian site. */
+  iranOnly?: boolean;
 };
 
 export const clients: ClientSite[] = [
@@ -48,6 +50,7 @@ export const clients: ClientSite[] = [
   {
     name: "Solace Iran",
     url: "https://solacemed.ir",
+    iranOnly: true,
     industry: "Skincare products",
     region: "Iran",
     image: "/clients/solacemed-ir.webp",
@@ -55,6 +58,7 @@ export const clients: ClientSite[] = [
   {
     name: "Helensa",
     url: "https://helensa.com",
+    iranOnly: true,
     industry: "Perfume brand & online shop (WooCommerce)",
     region: "Iran",
     image: "/clients/helensa-com.webp",
@@ -62,12 +66,14 @@ export const clients: ClientSite[] = [
   {
     name: "Ettehad Perfume",
     url: "https://ettehadperfume.com",
+    iranOnly: true,
     industry: "Fragrance manufacturer",
     image: "/clients/ettehadperfume-com.webp",
   },
   {
     name: "Shark Line",
     url: "https://sharkline.shop",
+    iranOnly: true,
     industry: "Car parts online shop (WooCommerce)",
     region: "Iran",
     image: "/clients/sharkline-shop.webp",
@@ -96,6 +102,11 @@ const clientsFa: Record<string, { industry: string; region?: string; related?: s
     region: "ایران",
   },
 };
+
+/** Clients visible in a locale: English hides Iranian clients, Persian shows everything. */
+export function clientsFor(locale: Locale): ClientSite[] {
+  return locale === "fa" ? clients : clients.filter((c) => !c.iranOnly);
+}
 
 export function localizeClient(c: ClientSite, locale: Locale): ClientSite {
   if (locale !== "fa") return c;

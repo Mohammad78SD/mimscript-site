@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { clients, localizeClient, type ClientSite } from "@/data/clients";
+import { clientsFor, localizeClient, type ClientSite } from "@/data/clients";
 import { Arrow } from "./Arrow";
 import { getDict, localePath, type Locale } from "@/i18n";
 
@@ -70,7 +70,7 @@ function Card({ c, locale }: { c: ClientSite; locale: Locale }) {
 export function ClientGrid({ locale }: { locale: Locale }) {
   return (
     <ul className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-      {clients.map((c) => (
+      {clientsFor(locale).map((c) => (
         <Card key={c.url} c={localizeClient(c, locale)} locale={locale} />
       ))}
     </ul>

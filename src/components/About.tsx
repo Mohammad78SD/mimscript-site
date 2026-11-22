@@ -41,7 +41,7 @@ export function About({ locale }: { locale: Locale }) {
   return (
     <section id="about" data-theme="light" ref={root} className="px-4 pb-24 pt-14 sm:px-8 md:pb-36 md:pt-20">
       <div className="mx-auto max-w-[1600px]">
-        <SectionLabel n={pad2(locale, 4)}>{t.label}</SectionLabel>
+        <SectionLabel n={pad2(locale, 3)}>{t.label}</SectionLabel>
         <p className="statement display mt-10 max-w-6xl text-[clamp(2rem,5.2vw,5rem)] !leading-[1.05] rtl:text-[clamp(1.7rem,4.2vw,4rem)]">
           {t.statement.split(" ").map((w, i) => (
             <span key={i} className="word inline-block pe-[0.25em]" style={{ color: "#0E1220" }}>
